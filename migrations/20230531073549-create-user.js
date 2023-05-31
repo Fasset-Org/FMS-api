@@ -26,13 +26,19 @@ module.exports = {
           allowNull: false
         },
         password: {
-          type: DataTypes.TEXT,
+          type: DataTypes.STRING,
           validate: {
             min: {
               args: [10],
               msg: "Minimum 10 characters required for password"
             }
           }
+        },
+        userType: {
+          type: DataTypes.STRING
+        },
+        resetPasswordToken: {
+          type: DataTypes.STRING
         },
         departmentId: {
           type: DataTypes.UUID
