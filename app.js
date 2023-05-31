@@ -7,6 +7,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const { sequelize } = require("./models");
 const appRouters = require("./routes/auth");
+const { errorHandler } = require("./middlewares/errorHandler");
 
 // initialize app
 const app = express();
@@ -33,8 +34,10 @@ app.get("/", (req, res, next) => {
 });
 
 // use appRouters
-
 app.use(`${BASE_URL}`, appRouters);
+
+// error handling middlewares
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
