@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         hooks: true
       });
 
-      this.belongsTo(UserModule, {
+      this.hasMany(UserModule, {
         foreignKey: "userId"
       });
     }
@@ -47,13 +47,19 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false
       },
       password: {
-        type: DataTypes.TEXT,
+        type: DataTypes.STRING,
         validate: {
           min: {
             args: [10],
             msg: "Minimum 10 characters required for password"
           }
         }
+      },
+      userType: {
+        type: DataTypes.STRING
+      },
+      resetPasswordToken: {
+        type: DataTypes.STRING
       },
       departmentId: {
         type: DataTypes.UUID
