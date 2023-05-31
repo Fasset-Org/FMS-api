@@ -11,10 +11,10 @@ module.exports = {
           type: DataTypes.UUID
         },
         departmentName: {
-          type: DataTypes.TEXT
+          type: DataTypes.STRING
         },
         departmentDesc: {
-          type: DataTypes.TEXT
+          type: DataTypes.STRING
         },
         dateCreated: {
           allowNull: false,
