@@ -22,10 +22,10 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4
       },
       departmentName: {
-        type: DataTypes.TEXT
+        type: DataTypes.STRING
       },
       departmentDesc: {
-        type: DataTypes.TEXT
+        type: DataTypes.STRING
       },
       dateCreated: {
         allowNull: false,
