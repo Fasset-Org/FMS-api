@@ -16,12 +16,34 @@ module.exports = (sequelize, DataTypes) => {
   }
   Role.init(
     {
-      fullName: DataTypes.TEXT,
-      userName: DataTypes.TEXT
+      id: {
+        primaryKey: true,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4
+      },
+      roleName: {
+        type: DataTypes.STRING
+      },
+      roleDesc: {
+        type: DataTypes.STRING
+      },
+      dateCreated: {
+        allowNull: false,
+        type: DataTypes.DATE
+      },
+      dateUpdated: {
+        allowNull: false,
+        type: DataTypes.DATE
+      }
     },
     {
       sequelize,
-      modelName: "Role"
+      modelName: "Role",
+      tableName: "roles",
+      schema: "wms",
+      timestamps: true,
+      updatedAt: "dateUpdated",
+      createdAt: "dateCreated"
     }
   );
   return Role;
