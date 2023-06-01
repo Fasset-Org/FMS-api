@@ -9,20 +9,23 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate({ Department, Role, UserModule }) {
       // define association here
-      this.hasOne(Department, {
+      this.belongsTo(Department, {
         foreignKey: "departmentId",
         onDelete: "CASCADE",
-        hooks: true
+        hooks: true,
+        as: 'department'
       });
 
-      this.hasOne(Role, {
+      this.belongsTo(Role, {
         foreignKey: "roleId",
         onDelete: "CASCADE",
-        hooks: true
+        hooks: true,
+        as: 'role'
       });
 
       this.hasMany(UserModule, {
-        foreignKey: "userId"
+        foreignKey: "userId",
+        as: 'userModules'
       });
     }
   }
