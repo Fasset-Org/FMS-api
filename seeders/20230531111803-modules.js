@@ -18,7 +18,7 @@ module.exports = {
       { schema: "wms", tableName: "modules", modelName: "Module" },
       [
         {
-          id: uuidv4(),
+          id: "998b051c-121b-4efa-bc88-613d6274ec03",
           moduleName: "ICT Admin",
           moduleDesc: "Same as the super admin with rights",
           dateCreated: new Date(),
