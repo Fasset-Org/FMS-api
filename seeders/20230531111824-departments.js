@@ -18,7 +18,7 @@ module.exports = {
       { schema: "wms", tableName: "departments", modelName: "Department" },
       [
         {
-          id: uuidv4(),
+          id: "4e0d2466-4bfa-4523-8582-f954ee300554",
           departmentName: "Information Communication Technology(ICT)",
           departmentDesc: "IT stuff reported here",
           dateCreated: new Date(),
