@@ -11,10 +11,11 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.belongsTo(User, {
         foreignKey: "userId",
-        hooks: true
+        hooks: true,
       });
       this.belongsTo(Module, {
-        foreignKey: "moduleId"
+        foreignKey: "moduleId",
+        as: 'module'
       });
     }
   }
