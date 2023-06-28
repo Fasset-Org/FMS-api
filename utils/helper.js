@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-const helper = {
+const Helper = {
   getJWTtoken: (payload, secret, expiresIn = null) => {
     if (expiresIn) {
       return jwt.sign(payload, secret, { expiresIn: expiresIn });
@@ -30,4 +30,4 @@ const helper = {
   }
 };
 
-module.exports = helper;
+module.exports = Helper;
