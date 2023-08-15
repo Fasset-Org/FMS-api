@@ -39,8 +39,12 @@ app.use(`${BASE_URL}`, appRouters);
 // error handling middlewares
 app.use(errorHandler);
 
-app.listen(port, () => {
+app.listen(port, async () => {
   console.log(`Server running on port ${port}`);
-  sequelize.authenticate();
-  console.log(`Database connected on port ${5432}`);
+  try {
+    await sequelize.authenticate();
+    console.log(`Database connected on port ${5432}`);
+  } catch (e) {
+    console.log(e.message);
+  }
 });
