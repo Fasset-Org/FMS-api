@@ -12,7 +12,9 @@ const { Op } = require("sequelize");
 const bcryptjs = require("bcryptjs");
 const {
   COOKIE_REFRESH_TOKEN,
-  REFRESH_SESSION_COOKIE_OPTIONS
+  SESSION_COOKIE_OPTIONS,
+  REFRESH_SESSION_COOKIE_OPTIONS,
+  getJWTtoken
 } = require("../../utils/helper");
 
 const AuthController = {
@@ -30,7 +32,7 @@ const AuthController = {
 
       // create reset password token
       // const resetPasswordToken = crypto.randomBytes(48).toString("hex");
-      const resetPasswordToken = helper.getJWTtoken(
+      const resetPasswordToken = getJWTtoken(
         { email: req.body.email },
         process.env.JWT_RESET_KEY,
         `${60 * 7}s`
@@ -45,13 +47,13 @@ const AuthController = {
       const html = `
         Dear ${user.email} <br /> 
         Please note that you have been added to FMS, if you are not aware of  
-        this action please contact devsupport@fasset.org.za <br /> or. <br /> 
-        Click <a href="${process.env.APP_URL}/resetPassword/${resetPasswordToken}">here</a> to reset your password
+        this action please contact devsupport@fasset.org.za. <br /><br /> 
+        Please click <a href="${process.env.APP_URL}/resetPassword/${resetPasswordToken}">here</a> to reset your password
       `;
 
       sendEmail({
         email: user.email,
-        subject: "FMS Password reset",
+        subject: "CMS Password Reset",
         html: html
       });
 
@@ -68,8 +70,6 @@ const AuthController = {
     try {
       const { email, password } = req.body;
 
-      console.log(email, password);
-
       const user = await User.findOne({
         where: {
           [Op.or]: [{ email: email }, { userName: email }]
@@ -80,7 +80,7 @@ const AuthController = {
         //   exclude: ["password"]
         // },
         include: [
-          { model: Role, as: "role" },
+          // { model: Role, as: "role" },
           { model: Department, as: "department" },
           {
             model: UserModule,
@@ -97,13 +97,13 @@ const AuthController = {
 
       if (!isPasswordCorrect) throw new ApiError("Invalid credentials", 404);
 
-      const token = helper.getJWTtoken(
+      const token = getJWTtoken(
         { ...user, password: "" },
         process.env.JWT_ACCESS_KEY,
-        `420s`
+        `1h`
       );
 
-      const refreshToken = helper.getJWTtoken(
+      const refreshToken = getJWTtoken(
         { ...user, password: "" },
         process.env.JWT_REFRESH_KEY
       );
@@ -120,7 +120,7 @@ const AuthController = {
       );
 
       return res.status(200).json(
-        ApiResponse("User login in successfully", "user", {
+        ApiResponse("User logged in successfully", "user", {
           ...user,
           password: "",
           token: token,
@@ -133,8 +133,23 @@ const AuthController = {
     }
   },
 
-  isLoggedIn: (req, res, next) => {
-	
+  isUserLoggedIn: async (req, res, next) => {
+    try {
+      const user = req.user;
+
+      return res.status(200).json(ApiResponse("User authorized", "user", user));
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  },
+
+  resetPassword: async (req, res, next) => {
+    try {
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
   }
 };
 
