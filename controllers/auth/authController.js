@@ -14,11 +14,14 @@ const {
   COOKIE_REFRESH_TOKEN,
   SESSION_COOKIE_OPTIONS,
   REFRESH_SESSION_COOKIE_OPTIONS,
-  getJWTtoken
+  getJWTtoken,
+  verifyJWTtoken
 } = require("../../utils/helper");
+const jwt = require("jsonwebtoken");
 
 const AuthController = {
   addUser: async (req, res, next) => {
+    const t = await sequelize.transaction();
     try {
       // check if user exist
       const userExist = await User.findOne({
@@ -35,14 +38,18 @@ const AuthController = {
       const resetPasswordToken = getJWTtoken(
         { email: req.body.email },
         process.env.JWT_RESET_KEY,
-        `${60 * 7}s`
+        `10m`
       );
 
       // create user
-      const user = await User.create({
-        ...req.body,
-        resetPasswordToken: resetPasswordToken
-      });
+      const user = await User.create({ ...req.body }, { transaction: t });
+
+      const userModule = await UserModule.create(
+        { userId: req.body.userId, moduleId: req.body.moduleId },
+        { transaction: t }
+      );
+
+      t.commit();
 
       const html = `
         Dear ${user.email} <br /> 
@@ -62,6 +69,7 @@ const AuthController = {
         .json(ApiResponse("User added successfully", "user", user));
     } catch (err) {
       console.log(err);
+      t.rollback();
       next(err);
     }
   },
@@ -141,6 +149,21 @@ const AuthController = {
     } catch (e) {
       console.log(e);
       next(e);
+    }
+  },
+
+  verifyResetToken: async (req, res, next) => {
+    try {
+      const { resetToken } = req.body;
+      const verifyResetToken = jwt.verify(
+        resetToken,
+        process.env.JWT_RESET_KEY
+      );
+
+      return res.status(200).json(ApiResponse("User reset token verified"));
+    } catch (e) {
+      // console.log(e);
+      next(new ApiError("URL expired", 400));
     }
   },
 
