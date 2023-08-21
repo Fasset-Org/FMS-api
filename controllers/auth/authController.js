@@ -38,7 +38,7 @@ const AuthController = {
       const resetPasswordToken = getJWTtoken(
         { email: req.body.email },
         process.env.JWT_RESET_KEY,
-        `10m`
+        `1d`
       );
 
       // create user
@@ -169,6 +169,24 @@ const AuthController = {
 
   resetPassword: async (req, res, next) => {
     try {
+      const { resetToken } = req.params;
+
+      const claims = verifyJWTtoken(resetToken, process.env.JWT_RESET_KEY);
+
+      const user = await User.findOne({ where: { email: claims?.email } });
+
+      if (!user) throw new ApiError("User not registered", 404);
+
+      const hash = await bcryptjs.hash(
+        req.body.password,
+        await bcryptjs.genSalt(10)
+      );
+
+      await user.update({ password: hash });
+
+      return res
+        .status(200)
+        .json(ApiResponse("User password updated successfully"));
     } catch (e) {
       console.log(e);
       next(e);
