@@ -1,4 +1,4 @@
-const { Department, Module } = require("../../models");
+const { Department, Module, User } = require("../../models");
 const { ApiError, ApiResponse } = require("../../utils/response");
 
 const AdminController = {
@@ -89,6 +89,16 @@ const AdminController = {
       return res
         .status(200)
         .json(ApiResponse("Module fetched successfully", "modules", modules));
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  },
+  getAllUsers: async (req, res, next) => {
+    try {
+      const users = await User.findAll();
+
+      return res.status(200).json(ApiResponse("Users fetched", "users", users));
     } catch (e) {
       console.log(e);
       next(e);
