@@ -1,17 +1,28 @@
-const {Router} = require('express');
-const AuthMid = require('../middlewares/authMid');
-const { addDepartment, editDepartment, getAllDepartments, addModule, editModule, getAllModules } = require('../controllers/admin/adminController');
+const { Router } = require("express");
+const AuthMid = require("../middlewares/authMid");
+const {
+  addDepartment,
+  editDepartment,
+  getAllDepartments,
+  addModule,
+  editModule,
+  getAllModules,
+  getAllUsers
+} = require("../controllers/admin/adminController");
 
-const adminRouter = Router()
+const adminRouter = Router();
 
 // Department routes
-adminRouter.post('/department', AuthMid, addDepartment);
-adminRouter.post('/department/:departmentId', AuthMid, editDepartment);
-adminRouter.get('/departments', AuthMid, getAllDepartments)
+adminRouter.post("/department", AuthMid, addDepartment);
+adminRouter.post("/department/:departmentId", AuthMid, editDepartment);
+adminRouter.get("/departments", AuthMid, getAllDepartments);
 
 // Module routes
-adminRouter.post('/module', AuthMid, addModule);
-adminRouter.post('/module/:moduleId', AuthMid, editModule);
-adminRouter.get('/modules', AuthMid, getAllModules);
+adminRouter.post("/module", AuthMid, addModule);
+adminRouter.post("/module/:moduleId", AuthMid, editModule);
+adminRouter.get("/modules", AuthMid, getAllModules);
 
-module.exports = adminRouter
+// Users
+adminRouter.get("/users", AuthMid, getAllUsers);
+
+module.exports = adminRouter;
