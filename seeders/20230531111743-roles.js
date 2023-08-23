@@ -21,8 +21,8 @@ module.exports = {
           id: "767dabe9-434d-46f8-88ae-d8961fc25e30",
           roleName: "ICT Administrator(Desktop Support Specialist)",
           roleDesc: "Super User",
-          dateCreated: new Date(),
-          dateUpdated: new Date()
+          createdAt: new Date(),
+          updatedAt: new Date()
         }
       ],
       {}
