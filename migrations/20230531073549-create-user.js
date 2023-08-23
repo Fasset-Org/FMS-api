@@ -45,11 +45,11 @@ module.exports = {
         roleId: {
           type: DataTypes.UUID
         },
-        dateCreated: {
+        createdAt: {
           allowNull: false,
           type: DataTypes.DATE
         },
-        dateUpdated: {
+        updatedAt: {
           allowNull: false,
           type: DataTypes.DATE
         }
