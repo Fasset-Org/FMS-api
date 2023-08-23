@@ -44,8 +44,7 @@ module.exports = {
           type: DataTypes.TEXT
         },
         meetingPasscode: {
-          type: DataTypes.TEXT,
-          allowNull: false
+          type: DataTypes.TEXT
         },
         meetingDate: {
           type: DataTypes.DATE
@@ -58,7 +57,7 @@ module.exports = {
           type: DataTypes.ARRAY(DataTypes.JSON)
         },
         tenderStatus: {
-          type: DataTypes.BOOLEAN,
+          type: DataTypes.TEXT,
           allowNull: false
         },
         createdAt: {
