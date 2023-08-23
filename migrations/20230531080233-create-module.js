@@ -15,11 +15,11 @@ module.exports = {
         moduleDesc: {
           type: DataTypes.STRING
         },
-        dateCreated: {
+        createdAt: {
           allowNull: false,
           type: DataTypes.DATE
         },
-        dateUpdated: {
+        updatedAt: {
           allowNull: false,
           type: DataTypes.DATE
         }
