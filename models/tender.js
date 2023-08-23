@@ -10,13 +10,16 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
+
+    
   }
   Tender.init(
     {
       id: {
         allowNull: false,
         primaryKey: true,
-        type: DataTypes.UUID
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4
       },
       tenderName: {
         type: DataTypes.TEXT,
@@ -52,22 +55,21 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT
       },
       meetingPasscode: {
-        type: DataTypes.TEXT,
-        allowNull: false
+        type: DataTypes.TEXT
       },
       meetingDate: {
         type: DataTypes.DATE
       },
       tenderDocument: {
-        type: DataTypes.TEXT,
-        allowNull: false
+        type: DataTypes.TEXT
       },
       bidders: {
-        type: DataTypes.ARRAY(DataTypes.JSON)
+        type: DataTypes.ARRAY(DataTypes.JSON),
       },
       tenderStatus: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false
+        type: DataTypes.TEXT,
+        allowNull: false,
+        defaultValue: "inactive"
       },
       createdAt: {
         allowNull: false,
