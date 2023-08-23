@@ -27,11 +27,11 @@ module.exports = (sequelize, DataTypes) => {
       moduleDesc: {
         type: DataTypes.TEXT
       },
-      dateCreated: {
+      createdAt: {
         allowNull: false,
         type: DataTypes.DATE
       },
-      dateUpdated: {
+      updatedAt: {
         allowNull: false,
         type: DataTypes.DATE
       }
@@ -41,9 +41,7 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Module",
       tableName: "modules",
       timestamps: true,
-      schema: "wms",
-      updatedAt: "dateUpdated",
-      createdAt: "dateCreated"
+      schema: "wms"
     }
   );
   return Module;
