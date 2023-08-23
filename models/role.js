@@ -27,11 +27,11 @@ module.exports = (sequelize, DataTypes) => {
       roleDesc: {
         type: DataTypes.STRING
       },
-      dateCreated: {
+      createdAt: {
         allowNull: false,
         type: DataTypes.DATE
       },
-      dateUpdated: {
+      updatedAt: {
         allowNull: false,
         type: DataTypes.DATE
       }
@@ -42,8 +42,6 @@ module.exports = (sequelize, DataTypes) => {
       tableName: "roles",
       schema: "wms",
       timestamps: true,
-      updatedAt: "dateUpdated",
-      createdAt: "dateCreated"
     }
   );
   return Role;
