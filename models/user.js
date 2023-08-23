@@ -13,19 +13,19 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "departmentId",
         onDelete: "CASCADE",
         hooks: true,
-        as: 'department'
+        as: "department"
       });
 
       this.belongsTo(Role, {
         foreignKey: "roleId",
         onDelete: "CASCADE",
         hooks: true,
-        as: 'role'
+        as: "role"
       });
 
       this.hasMany(UserModule, {
         foreignKey: "userId",
-        as: 'userModules'
+        as: "userModules"
       });
     }
   }
@@ -59,15 +59,23 @@ module.exports = (sequelize, DataTypes) => {
         }
       },
       userType: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING
         // allowNull: false
       },
       departmentId: {
-        type: DataTypes.UUID,
+        type: DataTypes.UUID
         // allowNull: false,
       },
       roleId: {
         type: DataTypes.UUID
+      },
+      createdAt: {
+        allowNull: false,
+        type: DataTypes.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: DataTypes.DATE
       }
     },
     {
@@ -75,9 +83,7 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "User",
       schema: "wms",
       timestamps: true,
-      tableName: "users",
-      updatedAt: "dateUpdated",
-      createdAt: "dateCreated"
+      tableName: "users"
     }
   );
   return User;
