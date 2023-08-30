@@ -92,7 +92,8 @@ const SCMController = {
   getAllCurrentTenders: async (req, res, next) => {
     try {
       const currentTenders = await Tender.findAll({
-        where: { closingDate: { [Op.gte]: new Date() } }
+        where: { closingDate: { [Op.gte]: new Date() } },
+        
       });
 
       return res
