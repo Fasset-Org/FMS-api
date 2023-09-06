@@ -3,7 +3,7 @@
 module.exports = {
   async up(queryInterface, DataTypes) {
     await queryInterface.createTable(
-      { schema: "wms", tableName: "Qualifications" },
+      { schema: "wms", tableName: "qualifications" },
       {
         id: {
           allowNull: false,
