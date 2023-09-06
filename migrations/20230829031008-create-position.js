@@ -1,34 +1,55 @@
-'use strict';
+"use strict";
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Positions', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
-      },
-      firstName: {
-        type: Sequelize.STRING
-      },
-      lastName: {
-        type: Sequelize.STRING
-      },
-      email: {
-        type: Sequelize.STRING
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
+  async up(queryInterface, DataTypes) {
+    await queryInterface.createTable(
+      { schema: "wms", tableName: "positions" },
+      {
+        id: {
+          allowNull: false,
+          primaryKey: true,
+          type: DataTypes.UUID
+        },
+        jobTitle: {
+          type: DataTypes.TEXT,
+          allowNull: false
+        },
+        purposeOfJob: {
+          type: DataTypes.TEXT,
+          allowNull: false
+        },
+        departmentId: {
+          type: DataTypes.UUID,
+          allowNull: false
+        },
+        reportingTo: {
+          type: DataTypes.TEXT,
+          allowNull: false
+        },
+        remuneration: {
+          type: DataTypes.TEXT,
+          allowNull: false
+        },
+        applicationsEmail: {
+          type: DataTypes.TEXT,
+          allowNull: false
+        },
+        jobSpecDocumentName: {
+          type: DataTypes.TEXT,
+          allowNull: false
+        },
+        createdAt: {
+          allowNull: false,
+          type: DataTypes.DATE
+        },
+        updatedAt: {
+          allowNull: false,
+          type: DataTypes.DATE
+        }
       }
-    });
+    );
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Positions');
+    await queryInterface.dropTable({ schema: "wms", tableName: "positions" });
   }
 };
