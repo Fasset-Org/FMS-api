@@ -27,6 +27,7 @@ module.exports = {
             "@Password123",
             await bcryptjs.genSalt(10)
           ),
+          userType: "Super",
           createdAt: new Date(),
           updatedAt: new Date()
         }
