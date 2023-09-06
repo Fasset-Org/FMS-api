@@ -7,8 +7,12 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
+    static associate({ PositionQualification }) {
       // define association here
+
+      this.hasMany(PositionQualification, {
+        foreignKey: "qualificationId"
+      });
     }
   }
   Qualification.init(
@@ -40,7 +44,8 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Qualification",
-      schema: "wms"
+      schema: "wms",
+      tableName: "qualifications"
     }
   );
   return Qualification;
