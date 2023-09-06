@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Position extends Model {
     /**
@@ -9,17 +7,72 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
+    static associate({ Department, PositionQualification, PositionQuestion }) {
       // define association here
+      this.belongsTo(Department, {
+        foreignKey: "departmentId"
+      });
+
+      this.hasMany(PositionQualification, {
+        foreignKey: "positionId"
+      });
+
+      this.hasMany(PositionQuestion, {
+        foreignKey: "positionId"
+      });
     }
   }
-  Position.init({
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    email: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'Position',
-  });
+  Position.init(
+    {
+      id: {
+        allowNull: false,
+        primaryKey: true,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4
+      },
+      jobTitle: {
+        type: DataTypes.TEXT,
+        allowNull: false
+      },
+      purposeOfJob: {
+        type: DataTypes.TEXT,
+        allowNull: false
+      },
+      departmentId: {
+        type: DataTypes.UUID,
+        allowNull: false
+      },
+      reportingTo: {
+        type: DataTypes.TEXT,
+        allowNull: false
+      },
+      remuneration: {
+        type: DataTypes.TEXT,
+        allowNull: false
+      },
+      applicationsEmail: {
+        type: DataTypes.TEXT,
+        allowNull: false
+      },
+      jobSpecDocumentName: {
+        type: DataTypes.TEXT,
+        allowNull: false
+      },
+      createdAt: {
+        allowNull: false,
+        type: DataTypes.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: DataTypes.DATE
+      }
+    },
+    {
+      sequelize,
+      modelName: "Position",
+      tableName: "positions",
+      schema: "wms"
+    }
+  );
   return Position;
 };
