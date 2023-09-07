@@ -3,7 +3,8 @@ const {
   PositionQuestion,
   PositionQualification,
   Position,
-  sequelize
+  sequelize,
+  Department
 } = require("../../models");
 const { ApiResponse, ApiError } = require("../../utils/response");
 
@@ -114,13 +115,16 @@ const HumanResourceController = {
     }
   },
 
-  getAllPositionById: async () => {
+  getAllPositionById: async (req, res, next) => {
     try {
       const { positionId } = req.params;
 
       const position = await Position.findOne({
         where: { id: positionId },
-        include: [PositionQualification, PositionQuestion]
+        include: [
+          { model: PositionQualification, include: Qualification },
+          PositionQuestion
+        ]
       });
 
       if (!position) throw new ApiError("Error fetching the position", 404);
@@ -139,7 +143,8 @@ const HumanResourceController = {
   getAllPositions: async (req, res, next) => {
     try {
       const positions = await Position.findAll({
-        include: [PositionQualification, PositionQuestion]
+        include: [Department],
+        order: [["createdAt", "DESC"]]
       });
 
       return res
@@ -149,13 +154,16 @@ const HumanResourceController = {
         );
     } catch (e) {
       console.log(e);
+      next(e);
     }
   },
   addPositionQuestion: async (req, res, next) => {
     try {
       await PositionQuestion.create({ ...req.body });
 
-      return res.status(ApiResponse("Position question created successfully"));
+      return res
+        .status(200)
+        .json(ApiResponse("Position question created successfully"));
     } catch (e) {
       console.log(e);
       if (e.errors)
