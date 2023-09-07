@@ -93,7 +93,7 @@ const SCMController = {
     try {
       const currentTenders = await Tender.findAll({
         where: { closingDate: { [Op.gte]: new Date() } },
-        
+        order: [["createdAt", "DESC"]]
       });
 
       return res
