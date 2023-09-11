@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const {
   Qualification,
   PositionQuestion,
@@ -95,27 +96,65 @@ const HumanResourceController = {
   },
 
   editPosition: async (req, res, next) => {
+    const t = await sequelize.transaction();
+
     try {
       const { positionId } = req.params;
 
+      const jobSpecDocument = req?.files?.jobSpecDocumentName;
+
       const position = await Position.findOne({ where: { id: positionId } });
 
-      if (!position) throw new ApiError("Error updating position", 404);
+      // destroy all qualifications and add the new ones
+      await PositionQualification.destroy({
+        where: { positionId: position.id }
+      });
 
-      await position.update({ ...req.body });
+      const qualifications = JSON.parse(req.body.qualifications);
+
+      for (const qualification of qualifications) {
+        await PositionQualification.create(
+          {
+            qualificationId: qualification.value,
+            positionId: position.id
+          },
+          { transaction: t }
+        );
+      }
+
+      let fileName = "";
+
+      // if new document uploaded
+      if (jobSpecDocument) {
+        const save = jobSpecDocument.mv(
+          `${process.env.POSITION_DOCUMENT_FOLDER}/${jobSpecDocument.name}`
+        );
+
+        fileName = jobSpecDocument.name;
+      } else {
+        fileName = position.jobSpecDocumentName;
+      }
+
+      await position.update(
+        { ...req.body, jobSpecDocumentName: fileName },
+        { transaction: t }
+      );
+
+      await t.commit();
 
       return res
-        .status(200)
+        .status(201)
         .json(
           ApiResponse("Position updated successfully", "position", position)
         );
     } catch (e) {
       console.log(e);
+      await t.rollback();
       next(e);
     }
   },
 
-  getAllPositionById: async (req, res, next) => {
+  getPositionById: async (req, res, next) => {
     try {
       const { positionId } = req.params;
 
@@ -123,7 +162,8 @@ const HumanResourceController = {
         where: { id: positionId },
         include: [
           { model: PositionQualification, include: Qualification },
-          PositionQuestion
+          PositionQuestion,
+          Department
         ]
       });
 
@@ -140,9 +180,41 @@ const HumanResourceController = {
     }
   },
 
+  deletePosition: async (req, res, next) => {
+    try {
+      const { positionId } = req.params;
+
+      await Position.destroy({ where: { id: positionId } });
+
+      return res.status(200).json(ApiResponse("Position deleted successfully"));
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  },
+
   getAllPositions: async (req, res, next) => {
     try {
       const positions = await Position.findAll({
+        where: { closingDate: { [Op.gte]: new Date() } },
+        include: [Department],
+        order: [["createdAt", "DESC"]]
+      });
+
+      return res
+        .status(200)
+        .json(
+          ApiResponse("Position feched successfully", "positions", positions)
+        );
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  },
+  getAllPreviousPositions: async (req, res, next) => {
+    try {
+      const positions = await Position.findAll({
+        where: { closingDate: { [Op.lte]: new Date() } },
         include: [Department],
         order: [["createdAt", "DESC"]]
       });
@@ -173,6 +245,24 @@ const HumanResourceController = {
             422
           )
         );
+      next(e);
+    }
+  },
+  deletePositionQuestion: async (req, res, next) => {
+    try {
+      const { questionId } = req.params;
+
+      const question = await PositionQuestion.findOne({
+        where: { id: questionId }
+      });
+
+      if (!question) throw new ApiError("Error deleting question", 404);
+
+      await question.destroy();
+
+      return res.status(200).json(ApiResponse("Question deleted successfully"));
+    } catch (e) {
+      console.log(e);
       next(e);
     }
   }
