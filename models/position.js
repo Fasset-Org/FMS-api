@@ -54,6 +54,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: false
       },
+      closingDate: {
+        type: DataTypes.DATE,
+        allowNull: false
+      },
       jobSpecDocumentName: {
         type: DataTypes.TEXT,
         allowNull: false
