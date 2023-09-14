@@ -30,10 +30,14 @@ module.exports = {
           type: DataTypes.TEXT,
           allowNull: false
         },
+        tenderEndDate: {
+          type: DataTypes.DATE,
+        },
         closingDate: {
           type: DataTypes.DATE,
           allowNull: false
         },
+        
         meetingLink: {
           type: DataTypes.TEXT
         },
