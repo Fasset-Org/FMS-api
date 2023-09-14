@@ -22,7 +22,7 @@ HumanResourceRouter.put('/position/:positionId', AuthMid, editPosition);
 HumanResourceRouter.get('/position/:positionId', getPositionById)
 HumanResourceRouter.delete('/position/:positionId', AuthMid, deletePosition);
 HumanResourceRouter.get('/positions', getAllPositions);
-HumanResourceRouter.get('/previousPositions', AuthMid, getAllPreviousPositions);
+HumanResourceRouter.get('/previousPositions', getAllPreviousPositions);
 HumanResourceRouter.post("/positionQuestion", AuthMid, addPositionQuestion);
 HumanResourceRouter.delete("/positionQuestion/:questionId", AuthMid, deletePositionQuestion);
 
