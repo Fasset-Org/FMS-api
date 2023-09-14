@@ -30,6 +30,10 @@ module.exports = {
           type: DataTypes.TEXT,
           allowNull: false
         },
+        emailForQueries: {
+          type: DataTypes.TEXT,
+          allowNull: false
+        },
         applicationsEmail: {
           type: DataTypes.TEXT,
           allowNull: false
@@ -38,6 +42,7 @@ module.exports = {
           type: DataTypes.DATE,
           allowNull: false
         },
+
         jobSpecDocumentName: {
           type: DataTypes.TEXT,
           allowNull: false
