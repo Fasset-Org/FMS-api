@@ -151,8 +151,6 @@ const SCMController = {
       next(e);
     }
   },
-
-  editTender: async () => {}
 };
 
 module.exports = SCMController;
