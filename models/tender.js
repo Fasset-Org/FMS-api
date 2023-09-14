@@ -41,6 +41,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: false
       },
+      tenderEndDate: {
+        type: DataTypes.DATE,
+      },
       closingDate: {
         type: DataTypes.DATE,
         allowNull: false
