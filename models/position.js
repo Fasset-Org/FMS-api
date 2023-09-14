@@ -50,6 +50,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: false
       },
+      emailForQueries: {
+        type: DataTypes.TEXT,
+        allowNull: false
+      },
       applicationsEmail: {
         type: DataTypes.TEXT,
         allowNull: false
