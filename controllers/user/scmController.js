@@ -33,7 +33,7 @@ const SCMController = {
     }
   },
 
-  editSCMTender: async (req, res, next) => {
+  editTender: async (req, res, next) => {
     try {
       const { tenderId } = req.body;
 
@@ -72,17 +72,17 @@ const SCMController = {
     }
   },
 
-  deActivateTender: async (req, res, next) => {
+  getTenderById: async (req, res, next) => {
     try {
       const { tenderId } = req.params;
 
-      const tender = await Tender.findOne({ where: { id: tenderId } });
+      const tender = await Tender.findOne({
+        where: { id: tenderId }
+      });
 
-      if (!tender) throw new ApiError("Error deleting tender", 404);
-
-      await tender.update({ closingDate: new Date() });
-
-      return res.status(200).json(ApiResponse("Tender deleted successfully"));
+      return res
+        .status(200)
+        .json(ApiResponse("Tender fetched", "tender", tender));
     } catch (e) {
       console.log(e);
       next(e);
@@ -92,7 +92,7 @@ const SCMController = {
   getAllCurrentTenders: async (req, res, next) => {
     try {
       const currentTenders = await Tender.findAll({
-        where: { closingDate: { [Op.gte]: new Date() } },
+        where: { tenderStatus: "active" },
         order: [["createdAt", "DESC"]]
       });
 
@@ -113,7 +113,8 @@ const SCMController = {
   getAllPreviousTenders: async (req, res, next) => {
     try {
       const previousTenders = await Tender.findAll({
-        where: { closingDate: { [Op.lte]: new Date() } }
+        where: { tenderStatus: "inactive" },
+        order: [["createdAt", "DESC"]]
       });
 
       return res
@@ -133,8 +134,9 @@ const SCMController = {
 
   getAllCancelledTenders: async (req, res, next) => {
     try {
-      const currentTenders = await Tender.findAll({
-        where: { tenderStatus: "inactive" }
+      const cancelledTenders = await Tender.findAll({
+        where: { tenderStatus: "cancelled" },
+        order: [["createdAt", "DESC"]]
       });
 
       return res
@@ -142,13 +144,81 @@ const SCMController = {
         .json(
           ApiResponse(
             "Current tenders fetched",
-            "currentTenders",
-            currentTenders
+            "cancelledTenders",
+            cancelledTenders
           )
         );
     } catch (e) {
       console.log(e);
       next(e);
+    }
+  },
+  markTenderAsPast: async (req, res, next) => {
+    try {
+      const { tenderId } = req.params;
+
+      const tender = await Tender.findOne({ where: { id: tenderId } });
+
+      if (!tender) throw new ApiError("Error deleting tender", 404);
+
+      await tender.update({ tenderStatus: "inactive" });
+
+      return res
+        .status(200)
+        .json(ApiResponse("Tender marked as past successfully"));
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  },
+  markTenderAsCancelled: async (req, res, next) => {
+    try {
+      const { tenderId } = req.params;
+
+      const tender = await Tender.findOne({ where: { id: tenderId } });
+
+      if (!tender) throw new ApiError("Error deleting tender", 404);
+
+      await tender.update({ tenderStatus: "cancelled" });
+
+      return res
+        .status(200)
+        .json(ApiResponse("Tender marked as cancelled successfully"));
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  },
+
+  markTenderAsCurrent: async (req, res, next) => {
+    try {
+      const { tenderId } = req.params;
+
+      const tender = await Tender.findOne({ where: { id: tenderId } });
+
+      if (!tender) throw new ApiError("Error deleting tender", 404);
+
+      await tender.update({ tenderStatus: "active" });
+
+      return res
+        .status(200)
+        .json(ApiResponse("Tender marked as active successfully successfully"));
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  },
+  downloadTenderDocument: (req, res, next) => {
+    try {
+      const filePath = `${process.env.TENDER_DOCUMENT_FOLDER}/${req.query.filename}`;
+
+      return res.download(filePath);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: false,
+        message: "Error happened",
+      });
     }
   },
 };
