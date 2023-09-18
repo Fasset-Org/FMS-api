@@ -10,8 +10,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
-
-    
   }
   Tender.init(
     {
@@ -43,6 +41,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       tenderEndDate: {
         type: DataTypes.DATE,
+        allowNull: true
       },
       closingDate: {
         type: DataTypes.DATE,
@@ -61,18 +60,19 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT
       },
       meetingDate: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
+        allowNull: true
       },
       tenderDocument: {
         type: DataTypes.TEXT
       },
       bidders: {
-        type: DataTypes.ARRAY(DataTypes.JSON),
+        type: DataTypes.ARRAY(DataTypes.JSON)
       },
       tenderStatus: {
         type: DataTypes.TEXT,
         allowNull: false,
-        defaultValue: "inactive"
+        defaultValue: "active"
       },
       createdAt: {
         allowNull: false,
