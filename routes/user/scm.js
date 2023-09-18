@@ -4,17 +4,26 @@ const {
   addTender,
   getAllCurrentTenders,
   getAllPreviousTenders,
+  markTenderAsPast,
+  markTenderAsCancelled,
+  markTenderAsCurrent,
+  getAllCancelledTenders,
   editTender,
-  editSCMTender,
-  deActivateTender
+  getTenderById,
+  downloadTenderDocument
 } = require("../../controllers/user/scmController");
 
 const scmRouter = Router();
 
 scmRouter.post("/tender", AuthMid, addTender);
-scmRouter.get("/currentTenders", AuthMid, getAllCurrentTenders);
-scmRouter.get("/previousTenders", AuthMid, getAllPreviousTenders);
-scmRouter.put("/tender", AuthMid, editSCMTender);
-scmRouter.delete('/tender/:tenderId', AuthMid, deActivateTender)
+scmRouter.put("/tender", AuthMid, editTender);
+scmRouter.get('/tender/:tenderId', getTenderById);
+scmRouter.get("/currentTenders", getAllCurrentTenders);
+scmRouter.get("/previousTenders" , getAllPreviousTenders);
+scmRouter.get('/cancelledTenders', getAllCancelledTenders);
+scmRouter.put('/markTenderAsPast/:tenderId', AuthMid, markTenderAsPast);
+scmRouter.put('/markTenderAsCancelled/:tenderId', AuthMid, markTenderAsCancelled);
+scmRouter.put('/markTenderAsActive/:tenderId', AuthMid, markTenderAsCurrent);
+scmRouter.get('/downloadTenderDocument', downloadTenderDocument);
 
 module.exports = scmRouter;
