@@ -265,7 +265,20 @@ const HumanResourceController = {
       console.log(e);
       next(e);
     }
-  }
+  },
+  downloadJobSpecDocument: (req, res, next) => {
+    try {
+      const filePath = `${process.env.POSITION_DOCUMENT_FOLDER}/${req.query.filename}`;
+
+      return res.download(filePath);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: false,
+        message: "Error happened",
+      });
+    }
+  },
 };
 
 module.exports = HumanResourceController;
