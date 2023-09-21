@@ -11,7 +11,9 @@ const {
   getAllPreviousPositions,
   deletePosition,
   getPositionById,
-  downloadJobSpecDocument
+  downloadJobSpecDocument,
+  jobApplication,
+  getPositionApplications
 } = require("../../controllers/user/humanResourceController");
 
 const HumanResourceRouter = Router();
@@ -27,5 +29,7 @@ HumanResourceRouter.get('/previousPositions', getAllPreviousPositions);
 HumanResourceRouter.post("/positionQuestion", AuthMid, addPositionQuestion);
 HumanResourceRouter.delete("/positionQuestion/:questionId", AuthMid, deletePositionQuestion);
 HumanResourceRouter.get('/downloadJobSpecDocument', downloadJobSpecDocument);
+HumanResourceRouter.post('/jobApplication', jobApplication);
+HumanResourceRouter.get('/jobApplication/:positionId', AuthMid, getPositionApplications);
 
 module.exports = HumanResourceRouter;
