@@ -33,7 +33,7 @@ module.exports = {
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable({
       schema: "wms",
-      tableName: "Qualifications"
+      tableName: "qualifications"
     });
   }
 };
