@@ -11,7 +11,7 @@ module.exports = {
           type: DataTypes.UUID
         },
         fullname: {
-          type: DataTypesDataTypes.TEXT,
+          type: DataTypes.TEXT,
           allowNull: false
         },
         email: {
@@ -56,6 +56,9 @@ module.exports = {
         },
         rejectReason: {
           type: DataTypes.TEXT,
+        },
+        positionId: {
+          type: DataTypes.UUID,
           allowNull: false
         },
         createdAt: {
