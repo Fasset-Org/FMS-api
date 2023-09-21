@@ -5,9 +5,13 @@ const {
   PositionQualification,
   Position,
   sequelize,
-  Department
+  Department,
+  Application
 } = require("../../models");
 const { ApiResponse, ApiError } = require("../../utils/response");
+const fs = require("node:fs");
+const { v4: uuidv4 } = require("uuid");
+const sendEmail = require("../../utils/sendEmail");
 
 const HumanResourceController = {
   addQualification: async (req, res, next) => {
@@ -275,10 +279,98 @@ const HumanResourceController = {
       console.log(err);
       return res.status(500).json({
         success: false,
-        message: "Error happened",
+        message: "Error happened"
       });
     }
   },
+  jobApplication: async (req, res, next) => {
+    try {
+      const { email, jobTitle, positionId } = req.body;
+
+      const emailExist = await Application.findOne({ where: { email: email } });
+
+      const position = await Position.findOne({ where: { id: positionId } });
+
+      if (emailExist) {
+        throw new ApiError("You have already applied for this position", 400);
+      }
+
+      const dir = `${process.env.POSITIONS_DOCUMENTS_FOLDER}/${position.jobTitle}`;
+      const userDir = `${dir}/${email}`;
+      // make position directory
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+
+      // make user directory inside position directory
+      fs.mkdirSync(userDir, { recursive: true });
+
+      // save all files
+      for (const [key, value] of Object.entries(req.files)) {
+        const file = req.files[key];
+        file.mv(`${userDir}/${file.name}`);
+      }
+
+      await Application.create({
+        ...req.body,
+        resumeDocumentName: req.files.resumeDocumentName.name,
+        idDocumentName: req.files.idDocumentName.name,
+        matricDocumentName: req.files.matricDocumentName.name,
+        qualificationDocumentName: req.files.qualificationDocumentName.name,
+        status: "submitted"
+      });
+
+      // send email to user to human resource
+      const userOptions = {
+        email: email,
+        subject: `${position.jobTitle} - Automatic Reply`,
+        html: `<p>Dear ${req.body.fullname}</p><br /><p>Please not that your application for ${position.jobTitle} has been received and reviewed.</p>`
+      };
+
+      sendEmail(userOptions);
+
+      const hrOptions = {
+        email: position.applicationsEmail,
+        subject: `${req.body.fullname} - ${position.jobTitle} Application`,
+        html: `<p>Dear Hiring Manager</p><br /><p>Please received application of ${req.body.fullname}</p>
+        <br /><p>To view application please click 
+        <a href="${process.env.APP_URL}/humanResource/jobApplications">here</a>
+        </p>
+        `
+      };
+      sendEmail(hrOptions);
+
+      return res
+        .status(201)
+        .json(
+          ApiResponse(
+            "Application submitted successfully, check your email for job reference"
+          )
+        );
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  },
+
+  getPositionApplications: async (req, res, next) => {
+    try {
+      const { positionId } = req.params;
+
+      const applications = await Application.findAll({
+        where: { positionId: positionId }
+      });
+
+      return res
+        .status(200)
+        .json(
+          ApiResponse("Applications fetched", "applications", applications)
+        );
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  }
 };
 
 module.exports = HumanResourceController;
