@@ -370,6 +370,66 @@ const HumanResourceController = {
       console.log(e);
       next(e);
     }
+  },
+
+  shortListApplication: async (req, res, next) => {
+    try {
+      const { applicationId } = req.params;
+
+      const application = await Application.findOne({
+        where: { id: applicationId }
+      });
+
+      if (!application) {
+        throw new ApiError("Error deleting the application", 404);
+      }
+
+      await application.update({ status: "shortlisted" });
+
+      return res
+        .status(200)
+        .json(ApiResponse("Application shortlisted successfully"));
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  },
+  rejectApplication: async (req, res, next) => {
+    try {
+      const { applicationId } = req.params;
+
+      const application = await Application.findOne({
+        where: { id: applicationId }
+      });
+
+      if (!application) {
+        throw new ApiError("Error rejecting application", 404);
+      }
+
+      await application.update({ status: "rejected" });
+
+      return res
+        .status(200)
+        .json(ApiResponse("Application rejected successfully"));
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  },
+  rejectAllApplication: async (req, res, next) => {
+    try {
+      const applications = await Application.update(
+        { status: "rejected" },
+        { where: { status: "submitted" } }
+      );
+
+      return res
+        .status(200)
+        .json(ApiResponse("All submitted applications deleted successfully"));
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
   }
 };
 
