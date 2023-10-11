@@ -39,7 +39,8 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "DocumentTitle",
       schema: "wms",
-      timestamps: true
+      timestamps: true,
+      tableName: "documentTitles"
     }
   );
   return DocumentTitle;
