@@ -324,7 +324,12 @@ const HumanResourceController = {
       const userOptions = {
         email: email,
         subject: `${position.jobTitle} - Automatic Reply`,
-        html: `<p>Dear ${req.body.fullname}</p><br /><p>Please not that your application for ${position.jobTitle} has been received and reviewed.</p>`
+        html: `<p>Dear ${req.body.fullname}</p><p>We thank you for showing interest to join FASSET and hereby 
+                acknowledge receipt of your application for the above position. Please note that your application 
+                is receiving attention from the HR Department.</p> <p>If you have not received communication 
+                within 6 weeks from the closing date, kindly consider your application as unsuccessful.</p> 
+                <p>Kind Regards,</p><p>FASSET HR TEAM</p><p>1st Floor, 296 Kent Avenue, Ferndale, Randburg, 2194 
+                PO Box 6801, Cresta, 2118</p>`
       };
 
       sendEmail(userOptions);
@@ -358,7 +363,8 @@ const HumanResourceController = {
       const { positionId } = req.params;
 
       const applications = await Application.findAll({
-        where: { positionId: positionId }
+        where: { positionId: positionId },
+        order: [["createdAt", "DESC"]]
       });
 
       return res
@@ -369,6 +375,160 @@ const HumanResourceController = {
     } catch (e) {
       console.log(e);
       next(e);
+    }
+  },
+
+  getPositionApplicationById: async (req, res, next) => {
+    try {
+      const { positionId, applicationId } = req.params;
+
+      const application = await Application.findOne({
+        where: {
+          [Op.and]: [{ id: applicationId }, { positionId: positionId }]
+        }
+      });
+
+      return res
+        .status(200)
+        .json(ApiResponse("Application fetched", "application", application));
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  },
+
+  shortListApplication: async (req, res, next) => {
+    try {
+      const { applicationId, positionId } = req.params;
+
+      const application = await Application.findOne({
+        where: { [Op.and]: [{ id: applicationId }, { positionId: positionId }] }
+      });
+
+      if (!application) {
+        throw new ApiError("Error deleting the application", 404);
+      }
+
+      await application.update({ status: "shortlisted" });
+
+      return res
+        .status(200)
+        .json(ApiResponse("Application shortlisted successfully"));
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  },
+  rejectApplication: async (req, res, next) => {
+    try {
+      const { applicationId } = req.params;
+
+      const application = await Application.findOne({
+        where: { id: applicationId },
+        include: [Position]
+      });
+
+      if (!application) {
+        throw new ApiError("Error rejecting application", 404);
+      }
+
+      await application.update({ status: "rejected" });
+
+      const emailOptions = {
+        email: application.email,
+        subject: `${application.Position.jobTitle}`,
+        html: `<p>Dear ${application.fullname}</p><p>Thank you for applying for ${application.Position.jobTitle} .</p>
+        <p>
+        <p>There have been several applications and after careful consideration we decided to continue with other 
+         applications.</p>
+        <p>We thank you sincerely for your efforts and wish you all the best in your job search and securing a new        
+         role</p>
+         <p>We do appreciate your interest in us, and we would like to retain your details on file should a more suitable 
+          position arise.</p>
+          <p>Kind Regards,</p>
+          <p>Fasset HR Team</p>
+        `
+      };
+
+      sendEmail(emailOptions);
+
+      return res
+        .status(200)
+        .json(
+          ApiResponse(
+            "Application rejected successfully",
+            "application",
+            application
+          )
+        );
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  },
+  rejectAllApplication: async (req, res, next) => {
+    try {
+      const { positionId } = req.params;
+
+      const applications = await Application.update(
+        { status: "rejected" },
+        {
+          where: {
+            [Op.and]: [{ status: "submitted" }, { positionId: positionId }]
+          }
+        }
+      );
+
+      return res
+        .status(200)
+        .json(
+          ApiResponse(
+            "All submitted applications rejected successfully",
+            "applications",
+            applications
+          )
+        );
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  },
+  unSelectApplication: async (req, res, next) => {
+    try {
+      const { applicationId } = req.params;
+
+      const application = await Application.findOne({
+        where: { id: applicationId }
+      });
+
+      if (!application) {
+        throw new ApiError("Error unselecting application", 404);
+      }
+
+      await application.update({ status: "submitted" });
+
+      return res
+        .status(200)
+        .json(ApiResponse("Application status reseted successfully"));
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  },
+  downloadApplicationDocument: async (req, res, next) => {
+    try {
+      const { positionId, email, filename } = req.query;
+      const position = await Position.findOne({ where: { id: positionId } });
+      const filePath = `${process.env.POSITIONS_DOCUMENTS_FOLDER}/${position.jobTitle}/${email}/${filename}`;
+      console.log(filePath);
+
+      return res.download(filePath);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: false,
+        message: "Error happened"
+      });
     }
   }
 };
