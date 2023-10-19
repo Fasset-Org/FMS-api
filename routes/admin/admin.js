@@ -7,7 +7,9 @@ const {
   addModule,
   editModule,
   getAllModules,
-  getAllUsers
+  getAllUsers,
+  editUser,
+  deleteUser
 } = require("../../controllers/admin/adminController");
 
 const adminRouter = Router();
@@ -22,7 +24,9 @@ adminRouter.post("/module", AuthMid, addModule);
 adminRouter.post("/module/:moduleId", AuthMid, editModule);
 adminRouter.get("/modules", AuthMid, getAllModules);
 
-// Users
+// Users routes
 adminRouter.get("/users", AuthMid, getAllUsers);
+adminRouter.put('/user/:userId', AuthMid, editUser);
+adminRouter.delete('/user/:userId', AuthMid, deleteUser);
 
 module.exports = adminRouter;
