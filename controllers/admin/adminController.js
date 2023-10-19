@@ -94,6 +94,36 @@ const AdminController = {
       next(e);
     }
   },
+  editUser: async (req, res, next) => {
+    try {
+      const { userId } = req.params;
+
+      const user = await User.findOne({ where: { id: userId } });
+
+      if (!user) throw new ApiError("Error updating a user", 404);
+
+      await user.update({...req.body})
+
+      return res.status(200).json(ApiResponse("User updated successfully"));
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  deleteUser: async (req, res, next) => {
+    try {
+      const { userId } = req.params;
+
+      await User.destroy({ where: { id: userId } });
+
+      return res.status(200).json({
+        success: false,
+        message: "User deleted successfully"
+      });
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  },
   getAllUsers: async (req, res, next) => {
     try {
       const users = await User.findAll();
@@ -104,6 +134,7 @@ const AdminController = {
       next(e);
     }
   }
+  
 };
 
 module.exports = AdminController;
