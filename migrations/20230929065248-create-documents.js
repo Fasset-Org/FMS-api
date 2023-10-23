@@ -18,6 +18,10 @@ module.exports = {
           type: DataTypes.TEXT,
           allowNull: false
         },
+        documentName: {
+          type: DataTypes.TEXT,
+          allowNull: false
+        },
         documentTitleId: {
           type: DataTypes.UUID,
           allowNull: false
