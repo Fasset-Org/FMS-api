@@ -1,4 +1,9 @@
-const { DocumentTitle, Document } = require("../../models");
+const {
+  DocumentTitle,
+  Document,
+  GeneralNotice,
+  GrantWindowApplication
+} = require("../../models");
 const { ApiResponse, ApiError } = require("../../utils/response");
 const { v4: UUIDV4 } = require("uuid");
 
@@ -110,11 +115,106 @@ const CSEController = {
 
       await Document.destroy({ where: { id: documentId } });
 
-      return res
-        .status(200)
-        .json(ApiResponse("Document deleted successfully"));
+      return res.status(200).json(ApiResponse("Document deleted successfully"));
     } catch (e) {
       console.log(e);
+    }
+  },
+
+  addGeneralNotice: async (req, res, next) => {
+    try {
+      await GeneralNotice.create(req.body);
+
+      return res
+        .status(201)
+        .json(ApiResponse("General notice added successfully"));
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  },
+
+  editGeneralNotice: async (req, res, next) => {
+    try {
+      const { generalNoticeId } = req.params;
+
+      const generalNotice = await GeneralNotice.findOne({
+        where: { id: generalNoticeId }
+      });
+
+      if (!generalNotice)
+        throw new ApiError("Error updating general notice", 404);
+
+      await generalNotice.update(req.body);
+
+      return res
+        .status(200)
+        .json(ApiResponse("General notice updated successfully"));
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  },
+  deleteGeneralNotice: async (req, res, next) => {
+    try {
+      const { generalNoticeId } = req.params;
+
+      await GeneralNotice.destroy({ where: { id: generalNoticeId } });
+      return res
+        .status(200)
+        .json(ApiResponse("General notice deleted successfully"));
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  },
+
+  addGrantWindow: async (req, res, next) => {
+    try {
+      await GrantWindowApplication.create(req.body);
+
+      return res
+        .status(201)
+        .json(ApiResponse("Grant window created successfully"));
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  },
+
+  editGrantWindow: async (req, res, next) => {
+    try {
+      const { grantWindowId } = req.params;
+
+      const grantWindow = await GrantWindowApplication.findOne({
+        where: { id: grantWindowId }
+      });
+
+      if (!grantWindow)
+        throw new ApiError("Error updating window application", 404);
+
+      await grantWindow.update(req.body);
+
+      return res
+        .status(200)
+        .json(ApiResponse("Grants window updated successfully"));
+    } catch (e) {
+      console.log(e);
+      next(e)
+    }
+  },
+  deleteGrantWindow: async (req, res, next) => {
+    try {
+      const { generalNoticeId } = req.params;
+
+      await GrantWindowApplication.destroy({ where: { id: generalNoticeId } });
+
+      return res
+        .status(200)
+        .json(ApiResponse("Grant window deleted successfully"));
+    } catch (e) {
+      console.log(e);
+      next(e);
     }
   }
 };
