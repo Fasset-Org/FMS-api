@@ -15,7 +15,7 @@ const app = express();
 
 dotenv.config({ path: `${__dirname}/config/config.env` });
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 8001;
 
 // middlewares
 app.use(fileUpload());
