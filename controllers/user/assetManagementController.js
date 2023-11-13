@@ -1,7 +1,8 @@
-const { Department, Module, User } = require("../../models");
-const { ApiError, ApiResponse } = require("../../utils/response");
+import { Department, Device, User } from "../../models";
+import Device from "../../models/device";
+import { ApiError, ApiResponse } from "../../utils/response";
 
-const AdminController = {
+const DeviceController = {
   addDepartment: async (req, res, next) => {
     try {
       const department = await Department.create({ ...req.body });
@@ -55,40 +56,40 @@ const AdminController = {
     }
   },
 
-  addModule: async (req, res, next) => {
+  addDevice: async (req, res, next) => {
     try {
-      const module = await Module.create({ ...req.body });
+      const device = await Module.create({ ...req.body });
 
-      if (!module) throw new ApiError("Error creating module", 400);
+      if (!device) throw new ApiError("Error creating asset", 400);
 
-      return res.status(201).json(ApiResponse("Module created successfully"));
+      return res.status(201).json(ApiResponse("Asset created successfully"));
     } catch (e) {
       console.log(e);
       next(e);
     }
   },
 
-  editModule: async (req, res, next) => {
+  editDevice: async (req, res, next) => {
     try {
-      const { moduleId } = req.params;
+      const { deviceId } = req.params;
 
-      const module = await Module.findOne({ where: { id: moduleId } });
+      const asset = await Asset.findOne({ where: { id: deviceId } });
 
-      if (!module) throw new ApiError("Module not found", 404);
+      if (!asset) throw new ApiError("Device not found", 404);
 
-      return res.status(200).json(ApiResponse("Module updated successfully"));
+      return res.status(200).json(ApiResponse("DEVICE updated successfully"));
     } catch (e) {
       console.log(e);
     }
   },
 
-  getAllModules: async (req, res, next) => {
+  getAllDevice: async (req, res, next) => {
     try {
-      const modules = await Module.findAll();
+      const device = await Device.findAll();
 
       return res
         .status(200)
-        .json(ApiResponse("Module fetched successfully", "modules", modules));
+        .json(ApiResponse("Device fetched successfully", "device", Device));
     } catch (e) {
       console.log(e);
       next(e);
@@ -137,4 +138,4 @@ const AdminController = {
   
 };
 
-module.exports = AdminController;
+asset.exports = DeviceController;
