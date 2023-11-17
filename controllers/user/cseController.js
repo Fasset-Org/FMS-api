@@ -169,6 +169,19 @@ const CSEController = {
     }
   },
 
+  getAllGeneralNotices: async (req, res, next) => {
+    try {
+      const notices = await GeneralNotice.findAll();
+
+      return res
+        .status(200)
+        .json(ApiResponse("All notices fetched", "notices", notices));
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  },
+
   addGrantWindow: async (req, res, next) => {
     try {
       await GrantWindowApplication.create(req.body);
@@ -181,7 +194,6 @@ const CSEController = {
       next(e);
     }
   },
-
   editGrantWindow: async (req, res, next) => {
     try {
       const { grantWindowId } = req.params;
@@ -197,10 +209,10 @@ const CSEController = {
 
       return res
         .status(200)
-        .json(ApiResponse("Grants window updated successfully"));
+        .json(ApiResponse("Grant window updated successfully"));
     } catch (e) {
       console.log(e);
-      next(e)
+      next(e);
     }
   },
   deleteGrantWindow: async (req, res, next) => {
@@ -212,6 +224,18 @@ const CSEController = {
       return res
         .status(200)
         .json(ApiResponse("Grant window deleted successfully"));
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  },
+  getAllGrantWindows: async (req, res, next) => {
+    try {
+      const grants = await GrantWindowApplication.findAll();
+
+      return res
+        .status(200)
+        .json(ApiResponse("All grants fetched", "grants", grants));
     } catch (e) {
       console.log(e);
       next(e);
