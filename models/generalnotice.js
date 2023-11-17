@@ -43,6 +43,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "GeneralNotice",
       tableName: "generalNotices",
+      schema: 'wms',
       timestamps: true
     }
   );
