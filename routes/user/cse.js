@@ -13,7 +13,8 @@ const {
   deleteGeneralNotice,
   addGrantWindow,
   editGrantWindow,
-  deleteGrantWindow
+  deleteGrantWindow,
+  getAllGeneralNotices
 } = require("../../controllers/user/cseController");
 
 const CSERouter = Router();
@@ -31,6 +32,8 @@ CSERouter.delete('/deleteDocument/:documentId', AuthMid, deleteDocument)
 CSERouter.post('/generalNotice', AuthMid, addGeneralNotice);
 CSERouter.put('/generalNotice/:generalNoticeId', AuthMid, editGeneralNotice);
 CSERouter.delete('/generalNotice/:generalNoticeId', AuthMid, deleteGeneralNotice);
+CSERouter.get('/generalNotices', AuthMid, getAllGeneralNotices);
+
 
 CSERouter.post('/grantWindow', AuthMid, addGrantWindow);
 CSERouter.put('/grantWindow/:grantWindowId', AuthMid, editGrantWindow);
