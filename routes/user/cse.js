@@ -14,7 +14,8 @@ const {
   addGrantWindow,
   editGrantWindow,
   deleteGrantWindow,
-  getAllGeneralNotices
+  getAllGeneralNotices,
+  getAllGrantWindows
 } = require("../../controllers/user/cseController");
 
 const CSERouter = Router();
@@ -38,5 +39,6 @@ CSERouter.get('/generalNotices', AuthMid, getAllGeneralNotices);
 CSERouter.post('/grantWindow', AuthMid, addGrantWindow);
 CSERouter.put('/grantWindow/:grantWindowId', AuthMid, editGrantWindow);
 CSERouter.delete('/grantWindow/:grantWindowId', AuthMid, deleteGrantWindow);
+CSERouter.get('/grantWindows', AuthMid, getAllGrantWindows);
 
 module.exports = CSERouter;
