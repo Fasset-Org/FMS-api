@@ -16,7 +16,8 @@ module.exports = (sequelize, DataTypes) => {
       id: {
         allowNull: false,
         primaryKey: true,
-        type: DataTypes.UUID
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4
       },
       title: {
         type: DataTypes.TEXT,
@@ -43,7 +44,8 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "GrantWindowApplication",
       tableName: "grantWindowApplications",
-      timestamps: true
+      timestamps: true,
+      schema: 'wms'
     }
   );
   return GrantWindowApplication;
