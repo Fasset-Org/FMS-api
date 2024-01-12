@@ -2,7 +2,12 @@ const {
   DocumentTitle,
   Document,
   GeneralNotice,
-  GrantWindowApplication
+  GrantWindowApplication,
+  Banner,
+  Board,
+  Committee,
+  AnnualReport,
+  ResearchReport
 } = require("../../models");
 const { ApiResponse, ApiError } = require("../../utils/response");
 const { v4: UUIDV4 } = require("uuid");
@@ -78,8 +83,11 @@ const CSEController = {
       const file = req.files.documentFile;
       const originalFileName = file.name;
       const fileName = UUIDV4();
+      const fileExt = file.name.split(".")[1];
 
-      file.mv(`${process.env.DOWNLOADS_DOCUMENTS_FOLDER}/${fileName}`);
+      file.mv(
+        `${process.env.DOWNLOADS_DOCUMENTS_FOLDER}/${fileName}.${fileExt}`
+      );
 
       await Document.create({
         originalFileName: originalFileName,
@@ -239,6 +247,447 @@ const CSEController = {
     } catch (e) {
       console.log(e);
       next(e);
+    }
+  },
+
+  addBannerImage: async (req, res, next) => {
+    try {
+      const imageFile = req.files?.imageFile;
+
+      if (!imageFile) throw new ApiError("Error saving banner image", 4000);
+
+      const save = imageFile.mv(
+        `${process.env.BANNER_IMAGE_FOLDER}/${imageFile.name}`
+      );
+
+      if (!save) throw new ApiError("Error saving banner image", 400);
+
+      await Banner.create({ bannerImageURL: imageFile.name });
+
+      return res
+        .status(201)
+        .json(ApiResponse("Banner image uploaded successfully"));
+    } catch (e) {
+      next(e);
+      console.log(e);
+    }
+  },
+
+  getAllBannerImages: async (req, res, next) => {
+    try {
+      const banners = await Banner.findAll();
+
+      return res
+        .status(200)
+        .json(ApiResponse("All banners fetched", "banners", banners));
+    } catch (e) {
+      next(e);
+      console.log(e);
+    }
+  },
+
+  deleteBannerImage: async (req, res, next) => {
+    try {
+      const { bannerImageId } = req.params;
+
+      await Banner.destroy({ where: { id: bannerImageId } });
+
+      return res
+        .status(200)
+        .json(ApiResponse("Banner image deleted successfully"));
+    } catch (e) {
+      next(e);
+      console.log(e);
+    }
+  },
+
+  addBoardMember: async (req, res, next) => {
+    try {
+      const boardMemberImageFile = req.files?.file;
+
+      if (!boardMemberImageFile)
+        throw new ApiError("Error saving board member", 400);
+
+      const save = boardMemberImageFile.mv(
+        `${process.env.BOARD_MEMBERS_FOLDER}/${boardMemberImageFile.name}`
+      );
+
+      if (!save) throw new ApiError("Error saving board member", 400);
+
+      await Board.create({
+        ...req.body,
+        imageFileURL: boardMemberImageFile.name
+      });
+
+      return res
+        .status(201)
+        .json(ApiResponse("Board member added successfully"));
+    } catch (e) {
+      next(e);
+      console.log(e);
+    }
+  },
+  editBoardMember: async (req, res, next) => {
+    try {
+      const { boardMemberId } = req.params;
+
+      const boardMember = await Board.findOne({ where: { id: boardMemberId } });
+
+      if (!boardMember) throw new ApiError("Error updating board member", 404);
+
+      let boardMemberImageName = "";
+      const boardMemberImageFile = req.files?.file;
+
+      if (boardMemberImageFile) {
+        const save = boardMemberImageFile.mv(
+          `${process.env.BOARD_MEMBERS_FOLDER}/${boardMemberImageFile.name}`
+        );
+
+        if (!save) throw new ApiError("Error saving board member", 400);
+
+        boardMemberImageName = boardMemberImageFile.name;
+      } else {
+        boardMemberImageName = boardMember.imageFileURL;
+      }
+
+      await boardMember.update({
+        ...req.body,
+        imageFileURL: boardMemberImageName
+      });
+
+      return res
+        .status(200)
+        .json(ApiResponse("Board member updated successfully"));
+    } catch (e) {
+      next(e);
+      console.log(e);
+    }
+  },
+
+  getAllBoardMembers: async (req, res, next) => {
+    try {
+      const boardMembers = await Board.findAll();
+
+      return res
+        .status(200)
+        .json(
+          ApiResponse("Board members fetched", "boardMembers", boardMembers)
+        );
+    } catch (e) {
+      next(e);
+      console.log(e);
+    }
+  },
+
+  deleteBoardMember: async (req, res, next) => {
+    try {
+      const { boardMemberId } = req.params;
+
+      await Board.destroy({ where: { id: boardMemberId } });
+
+      return res
+        .status(200)
+        .json(ApiResponse("Board member deleted successfully"));
+    } catch (e) {
+      next(e);
+      console.log(e);
+    }
+  },
+
+  addCommitteeMember: async (req, res, next) => {
+    try {
+      const committeeMemberImageFile = req.files?.file;
+
+      if (!committeeMemberImageFile)
+        throw new ApiError("Error saving committee member", 400);
+
+      const save = committeeMemberImageFile.mv(
+        `${process.env.BOARD_MEMBERS_FOLDER}/${committeeMemberImageFile.name}`
+      );
+
+      if (!save) throw new ApiError("Error saving committee member", 400);
+
+      await Committee.create({
+        ...req.body,
+        imageFileURL: committeeMemberImageFile.name
+      });
+
+      return res
+        .status(201)
+        .json(ApiResponse("Committee member added successfully"));
+    } catch (e) {
+      next(e);
+      console.log(e);
+    }
+  },
+  editCommitteeMember: async (req, res, next) => {
+    try {
+      const { committeeMemberId } = req.params;
+
+      const committeeMember = await Committee.findOne({
+        where: { id: committeeMemberId }
+      });
+
+      if (!committeeMember)
+        throw new ApiError("Error updating committee member", 404);
+
+      let committeeMemberImageName = "";
+      const committeeMemberImageFile = req.files?.file;
+
+      if (committeeMemberImageFile) {
+        const save = boardMemberImageFile.mv(
+          `${process.env.BOARD_MEMBERS_FOLDER}/${committeeMemberImageFile.name}`
+        );
+
+        if (!save) throw new ApiError("Error saving committee member", 400);
+
+        committeeMemberImageName = committeeMemberImageFile.name;
+      } else {
+        committeeMemberImageName = committeeMember.imageFileURL;
+      }
+
+      await committeeMember.update({
+        ...req.body,
+        imageFileURL: committeeMemberImageName
+      });
+
+      return res
+        .status(200)
+        .json(ApiResponse("Committee member updated successfully"));
+    } catch (e) {
+      next(e);
+      console.log(e);
+    }
+  },
+
+  getAllCommitteeMembers: async (req, res, next) => {
+    try {
+      const committeeMembers = await Committee.findAll();
+
+      return res
+        .status(200)
+        .json(
+          ApiResponse(
+            "Committee members fetched",
+            "committeeMembers",
+            committeeMembers
+          )
+        );
+    } catch (e) {
+      next(e);
+      console.log(e);
+    }
+  },
+
+  deleteCommitteeMember: async (req, res, next) => {
+    try {
+      const { committeeMemberId } = req.params;
+
+      await Committee.destroy({ where: { id: committeeMemberId } });
+
+      return res
+        .status(200)
+        .json(ApiResponse("Committee member deleted successfully"));
+    } catch (e) {
+      next(e);
+      console.log(e);
+    }
+  },
+
+  addAnnualReport: async (req, res, next) => {
+    try {
+      const reportFile = req.files?.file;
+
+      if (!reportFile) throw new ApiError("Error saving annual report", 400);
+
+      const save = reportFile.mv(
+        `${process.env.ANNUAL_REPORTS_FOLDER}/${reportFile.name}`
+      );
+
+      if (!save) throw new ApiError("Error saving annual reports", 400);
+
+      await AnnualReport.create({
+        ...req.body,
+        annualReportFileURL: reportFile.name
+      });
+
+      return res
+        .status(201)
+        .json(ApiResponse("Annual report added successfully"));
+    } catch (e) {
+      next(e);
+      console.log(e);
+    }
+  },
+
+  editAnnualReport: async (req, res, next) => {
+    try {
+      const { annualReportId } = req.params;
+
+      const annualReport = await AnnualReport.findOne({
+        where: { id: annualReportId }
+      });
+
+      if (!annualReport)
+        throw new ApiError("Error updating annual report", 404);
+
+      const reportFile = req.file?.file;
+      let reportFileName = "";
+
+      if (reportFile) {
+        const save = reportFile.mv(
+          `${process.env.ANNUAL_REPORTS_FOLDER}/${reportFile.name}`
+        );
+
+        if (!save) throw new ApiError("Error saving annual report", 400);
+
+        reportFileName = reportFile.name;
+      } else {
+        reportFileName = annualReport.annualReportFileURL;
+      }
+
+      await annualReport.update({
+        ...req.body,
+        annualReportFileURL: reportFileName
+      });
+
+      return res
+        .status(200)
+        .json(ApiResponse("Annual report updated successfully"));
+    } catch (e) {
+      next(e);
+      console.log(e);
+    }
+  },
+
+  getAllAnnualReports: async (req, res, next) => {
+    try {
+      const annualReports = await AnnualReport.findAll();
+
+      return res
+        .status(200)
+        .json(
+          ApiResponse("Annual reports fetched", "annualReports", annualReports)
+        );
+    } catch (e) {
+      next(e);
+      console.log(e);
+    }
+  },
+
+  deleteAnnualReport: async (req, res, next) => {
+    try {
+      const { annualReportId } = req.params;
+
+      await AnnualReport.destroy({ where: { id: annualReportId } });
+
+      return res
+        .status(200)
+        .json(ApiResponse("Annual report deleted successfully"));
+    } catch (e) {
+      next(e);
+      console.log(e);
+    }
+  },
+
+  addResearchReport: async (req, res, next) => {
+    try {
+      const researchFile = req.files?.file;
+
+      if (!researchFile)
+        throw new ApiError("Error saving research report", 400);
+
+      const save = researchFile.mv(
+        `${process.env.RESEARCH_REPORTS_FOLDER}/${researchFile.name}`
+      );
+
+      if (!save) throw new ApiError("Error saving reserach reports", 400);
+
+      await ResearchReport.create({
+        ...req.body,
+        researchReportFileURL: researchFile.name
+      });
+
+      return res
+        .status(201)
+        .json(ApiResponse("Annual research added successfully"));
+    } catch (e) {
+      next(e);
+      console.log(e);
+    }
+  },
+
+  editResearchReport: async (req, res, next) => {
+    try {
+      const { researchReportId } = req.params;
+
+      const researchReport = await AnnualReport.findOne({
+        where: { id: researchReportId }
+      });
+
+      if (!researchReport)
+        throw new ApiError("Error updating research report", 404);
+
+      const researchFile = req.file?.file;
+      let researchFileName = "";
+
+      if (researchFile) {
+        const save = researchFile.mv(
+          `${process.env.RESEARCH_REPORTS_FOLDER}/${researchFile.name}`
+        );
+
+        if (!save) throw new ApiError("Error saving research report", 400);
+
+        researchFileName = researchFile.name;
+      } else {
+        researchFileName = researchReport.annualReportFileURL;
+      }
+
+      await researchReport.update({
+        ...req.body,
+        annualReportFileURL: researchFileName
+      });
+
+      return res
+        .status(200)
+        .json(ApiResponse("Annual report updated successfully"));
+    } catch (e) {
+      next(e);
+      console.log(e);
+    }
+  },
+
+  getAllResearchReports: async (req, res, next) => {
+    try {
+      const researchReports = await ResearchReport.findAll();
+
+      return res
+        .status(200)
+        .json(
+          ApiResponse(
+            "Annual reports fetched",
+            "researchReports",
+            researchReports
+          )
+        );
+    } catch (e) {
+      next(e);
+      console.log(e);
+    }
+  },
+
+  deleteResearchReport: async (req, res, next) => {
+    try {
+      const { researchReportId } = req.params;
+
+      await ResearchReport.destroy({ where: { id: researchReportId } });
+
+      return res
+        .status(200)
+        .json(ApiResponse("Annual research deleted successfully"));
+    } catch (e) {
+      next(e);
+      console.log(e);
     }
   }
 };
