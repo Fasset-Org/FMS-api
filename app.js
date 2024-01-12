@@ -6,6 +6,7 @@ const dotenv = require("dotenv");
 const morgan = require("morgan");
 const cors = require("cors");
 const fileUpload = require("express-fileupload");
+const path = require("path");
 const { sequelize } = require("./models");
 const appRouters = require("./routes/");
 const { errorHandler } = require("./middlewares/errorHandler");
@@ -15,6 +16,8 @@ const app = express();
 
 dotenv.config({ path: `${__dirname}/config/config.env` });
 
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 const port = process.env.PORT || 8001;
 
 // middlewares
@@ -23,7 +26,6 @@ app.use(cors({ origin: true, credentials: true }));
 app.use(morgan("method :url :status :res[content-length] - :response-time ms"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
 
 const NODE_ENV = process.env.NODE_ENV || "dev";
 
