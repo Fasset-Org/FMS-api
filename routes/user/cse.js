@@ -67,13 +67,13 @@ CSERouter.delete('/banner/:bannerImageId', AuthMid, deleteBannerImage);
 
 // Board Member Upload Routes 
 CSERouter.post('/boardMember', AuthMid, addBoardMember);
-CSERouter.put('/boardMember/:boardMemberId', AuthMid, editBoardMember);
+CSERouter.put('/boardMember', AuthMid, editBoardMember);
 CSERouter.get('/boardMembers', AuthMid, getAllBoardMembers);
 CSERouter.delete('/boardMember/:boardMemberId', AuthMid, deleteBoardMember);
 
 // Committee Member Upload Routes
 CSERouter.post('/committeeMember', AuthMid, addCommitteeMember);
-CSERouter.put('/committeeMember/:committeeMemberId', AuthMid, editCommitteeMember);
+CSERouter.put('/committeeMember', AuthMid, editCommitteeMember);
 CSERouter.get('/committeeMembers', AuthMid, getAllCommitteeMembers);
 CSERouter.delete('/committeeMember/:committeeMemberId', AuthMid, deleteCommitteeMember);
 
