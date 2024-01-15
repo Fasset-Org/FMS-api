@@ -329,7 +329,7 @@ const CSEController = {
   },
   editBoardMember: async (req, res, next) => {
     try {
-      const { boardMemberId } = req.params;
+      const { boardMemberId } = req.body;
 
       const boardMember = await Board.findOne({ where: { id: boardMemberId } });
 
@@ -366,7 +366,9 @@ const CSEController = {
 
   getAllBoardMembers: async (req, res, next) => {
     try {
-      const boardMembers = await Board.findAll();
+      const boardMembers = await Board.findAll({
+        order: [["createdAt", "DESC"]]
+      });
 
       return res
         .status(200)
@@ -422,7 +424,7 @@ const CSEController = {
   },
   editCommitteeMember: async (req, res, next) => {
     try {
-      const { committeeMemberId } = req.params;
+      const { committeeMemberId } = req.body;
 
       const committeeMember = await Committee.findOne({
         where: { id: committeeMemberId }
@@ -435,7 +437,7 @@ const CSEController = {
       const committeeMemberImageFile = req.files?.file;
 
       if (committeeMemberImageFile) {
-        const save = boardMemberImageFile.mv(
+        const save = committeeMemberImageFile.mv(
           `${process.env.BOARD_MEMBERS_FOLDER}/${committeeMemberImageFile.name}`
         );
 
