@@ -275,7 +275,7 @@ const CSEController = {
 
   getAllBannerImages: async (req, res, next) => {
     try {
-      const banners = await Banner.findAll();
+      const banners = await Banner.findAll({order: [["createdAt", "DESC"]]});
 
       return res
         .status(200)
@@ -367,7 +367,6 @@ const CSEController = {
   getAllBoardMembers: async (req, res, next) => {
     try {
       const boardMembers = await Board.findAll({
-        order: [["createdAt", "DESC"]]
       });
 
       return res
@@ -524,7 +523,7 @@ const CSEController = {
 
   editAnnualReport: async (req, res, next) => {
     try {
-      const { annualReportId } = req.params;
+      const { annualReportId } = req.body;
 
       const annualReport = await AnnualReport.findOne({
         where: { id: annualReportId }
@@ -621,9 +620,11 @@ const CSEController = {
 
   editResearchReport: async (req, res, next) => {
     try {
-      const { researchReportId } = req.params;
+      const { researchReportId } = req.body;
 
-      const researchReport = await AnnualReport.findOne({
+      console.log(req.body)
+
+      const researchReport = await ResearchReport.findOne({
         where: { id: researchReportId }
       });
 
@@ -647,7 +648,7 @@ const CSEController = {
 
       await researchReport.update({
         ...req.body,
-        annualReportFileURL: researchFileName
+        eserachReportFileURL: researchFileName
       });
 
       return res
@@ -690,6 +691,34 @@ const CSEController = {
     } catch (e) {
       next(e);
       console.log(e);
+    }
+  },
+
+  downloadAnnualReportsDocument: (req, res, next) => {
+    try {
+      const filePath = `${process.env.ANNUAL_REPORTS_FOLDER}/${req.query.fileName}`;
+
+      return res.download(filePath);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: false,
+        message: "Error happened"
+      });
+    }
+  },
+
+  downloadResearchReportsDocument: (req, res, next) => {
+    try {
+      const filePath = `${process.env.RESEARCH_REPORTS_FOLDER}/${req.query.fileName}`;
+
+      return res.download(filePath);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: false,
+        message: "Error happened"
+      });
     }
   }
 };
