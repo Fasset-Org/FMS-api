@@ -22,6 +22,10 @@ module.exports = {
           type: DataTypes.TEXT,
           allowNull: false
         },
+        position: {
+          type: DataTypes.TEXT,
+          allowNull: false
+        },
         createdAt: {
           allowNull: false,
           type: DataTypes.DATE
