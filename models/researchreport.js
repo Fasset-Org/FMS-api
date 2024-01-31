@@ -27,7 +27,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: false
       },
-      reserachReportFileURL: {
+      year: {
+        type: DataTypes.TEXT,
+        allowNull: false
+      },
+      researchReportFileURL: {
         type: DataTypes.TEXT,
         allowNull: false
       },
