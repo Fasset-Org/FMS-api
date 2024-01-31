@@ -34,7 +34,9 @@ const {
   addResearchReport,
   editResearchReport,
   getAllResearchReports,
-  deleteResearchReport
+  deleteResearchReport,
+  downloadAnnualReportsDocument,
+  downloadResearchReportsDocument
 } = require("../../controllers/user/cseController");
 
 const CSERouter = Router();
@@ -62,31 +64,33 @@ CSERouter.get('/grantWindows', AuthMid, getAllGrantWindows);
 
 // Banner Upload Routes 
 CSERouter.post('/banner', AuthMid, addBannerImage);
-CSERouter.get('/banners', AuthMid, getAllBannerImages);
+CSERouter.get('/banners', getAllBannerImages);
 CSERouter.delete('/banner/:bannerImageId', AuthMid, deleteBannerImage);
 
 // Board Member Upload Routes 
 CSERouter.post('/boardMember', AuthMid, addBoardMember);
 CSERouter.put('/boardMember', AuthMid, editBoardMember);
-CSERouter.get('/boardMembers', AuthMid, getAllBoardMembers);
+CSERouter.get('/boardMembers', getAllBoardMembers);
 CSERouter.delete('/boardMember/:boardMemberId', AuthMid, deleteBoardMember);
 
 // Committee Member Upload Routes
 CSERouter.post('/committeeMember', AuthMid, addCommitteeMember);
 CSERouter.put('/committeeMember', AuthMid, editCommitteeMember);
-CSERouter.get('/committeeMembers', AuthMid, getAllCommitteeMembers);
+CSERouter.get('/committeeMembers', getAllCommitteeMembers);
 CSERouter.delete('/committeeMember/:committeeMemberId', AuthMid, deleteCommitteeMember);
 
 // Annual Reports Routes
 CSERouter.post('/annualReport', AuthMid, addAnnualReport);
-CSERouter.put('/annualReport/:annualReportId', AuthMid, editAnnualReport);
+CSERouter.put('/annualReport', AuthMid, editAnnualReport);
 CSERouter.get('/annualReports', AuthMid, getAllAnnualReports);
-CSERouter.delete('/annualReports/:annualReportId', AuthMid, deleteAnnualReport);
+CSERouter.delete('/annualReport/:annualReportId', AuthMid, deleteAnnualReport);
+CSERouter.get('/downloadAnnualReportDocument', downloadAnnualReportsDocument);
 
 // Research Reports Routes
 CSERouter.post('/researchReport', AuthMid, addResearchReport);
-CSERouter.put('/researchReport/:researchReportId', AuthMid, editResearchReport);
+CSERouter.put('/researchReport', AuthMid, editResearchReport);
 CSERouter.get('/researchReports', AuthMid, getAllResearchReports);
-CSERouter.delete('/researchReports/:researchReportId', AuthMid, deleteResearchReport);
+CSERouter.delete('/researchReport/:researchReportId', AuthMid, deleteResearchReport);
+CSERouter.get('/downloadResearchReportDocument', downloadResearchReportsDocument);
 
 module.exports = CSERouter;
