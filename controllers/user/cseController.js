@@ -6,6 +6,7 @@ const {
   Banner,
   Board,
   Committee,
+  CommitteeName,
   AnnualReport,
   ResearchReport
 } = require("../../models");
@@ -67,6 +68,7 @@ const CSEController = {
   getAllDocumentTitles: async (req, res, next) => {
     try {
       const documentTitles = await DocumentTitle.findAll({
+        include: [Document],
         order: [["createdAt", "DESC"]]
       });
 
@@ -275,7 +277,7 @@ const CSEController = {
 
   getAllBannerImages: async (req, res, next) => {
     try {
-      const banners = await Banner.findAll({order: [["createdAt", "DESC"]]});
+      const banners = await Banner.findAll({ order: [["createdAt", "DESC"]] });
 
       return res
         .status(200)
@@ -366,8 +368,7 @@ const CSEController = {
 
   getAllBoardMembers: async (req, res, next) => {
     try {
-      const boardMembers = await Board.findAll({
-      });
+      const boardMembers = await Board.findAll({});
 
       return res
         .status(200)
@@ -392,6 +393,60 @@ const CSEController = {
     } catch (e) {
       next(e);
       console.log(e);
+    }
+  },
+
+  addCommitte: async (req, res, next) => {
+    try {
+      await CommitteeName.create(req.body);
+
+      return res.status(201).json(ApiResponse("Committee added successfully"));
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  },
+
+  editCommittee: async (req, res, next) => {
+    try {
+      const { committeeId } = req.params;
+
+      const committee = await CommitteeName.findOne({
+        where: { id: committeeId }
+      });
+
+      await committee.update({ ...req.body });
+
+      return res
+        .status(200)
+        .json(ApiResponse("Committee updated successfully"));
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  },
+
+  getAllCommittees: async (req, res, next) => {
+    try {
+      const committees = await CommitteeName.findAll();
+
+      return res
+        .status(200)
+        .json(ApiResponse("Committees fetched", "committees", committees));
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  },
+
+  deleteCommitee: async (req, res, next) => {
+    try {
+      const { committeeId } = req.params;
+
+      await CommitteeName.destroy({ where: { id: committeeId } });
+    } catch (e) {
+      console.log(e);
+      next(e);
     }
   },
 
@@ -622,7 +677,7 @@ const CSEController = {
     try {
       const { researchReportId } = req.body;
 
-      console.log(req.body)
+      console.log(req.body);
 
       const researchReport = await ResearchReport.findOne({
         where: { id: researchReportId }

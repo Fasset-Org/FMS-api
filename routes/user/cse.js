@@ -43,7 +43,7 @@ const CSERouter = Router();
 
 // Downloads routes
 CSERouter.post("/downloadsTitle", AuthMid, addDocumentTitle);
-CSERouter.get("/downloadsTitle", AuthMid, getAllDocumentTitles);
+CSERouter.get("/downloadsTitle", getAllDocumentTitles);
 CSERouter.put('/downloadsTitle/:downloadsTitleId', AuthMid, editDownloadsTitle);
 CSERouter.get('/documentTitle/:titleId', AuthMid, getAllDocumentTitleById);
 CSERouter.post('/addDocument', AuthMid, addDocument);
@@ -82,14 +82,14 @@ CSERouter.delete('/committeeMember/:committeeMemberId', AuthMid, deleteCommittee
 // Annual Reports Routes
 CSERouter.post('/annualReport', AuthMid, addAnnualReport);
 CSERouter.put('/annualReport', AuthMid, editAnnualReport);
-CSERouter.get('/annualReports', AuthMid, getAllAnnualReports);
+CSERouter.get('/annualReports', getAllAnnualReports);
 CSERouter.delete('/annualReport/:annualReportId', AuthMid, deleteAnnualReport);
 CSERouter.get('/downloadAnnualReportDocument', downloadAnnualReportsDocument);
 
 // Research Reports Routes
 CSERouter.post('/researchReport', AuthMid, addResearchReport);
 CSERouter.put('/researchReport', AuthMid, editResearchReport);
-CSERouter.get('/researchReports', AuthMid, getAllResearchReports);
+CSERouter.get('/researchReports', getAllResearchReports);
 CSERouter.delete('/researchReport/:researchReportId', AuthMid, deleteResearchReport);
 CSERouter.get('/downloadResearchReportDocument', downloadResearchReportsDocument);
 
