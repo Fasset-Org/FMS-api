@@ -51,6 +51,8 @@ const HumanResourceController = {
     try {
       const jobSpecDocument = req?.files?.jobSpecDocumentName;
 
+      console.log(jobSpecDocument);
+
       if (!jobSpecDocument) throw new ApiError("Error creating position", 400);
 
       let position = await Position.create(
