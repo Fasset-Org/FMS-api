@@ -7,8 +7,9 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
+    static associate({ CommitteeName }) {
       // define association here
+      this.belongsTo(CommitteeName, { foreignKey: "committeeNameId" });
     }
   }
   Committee.init(
@@ -28,11 +29,14 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false
       },
       imageFileURL: {
-        type: DataTypes.TEXT,
-        allowNull: false
+        type: DataTypes.TEXT
       },
       position: {
         type: DataTypes.TEXT,
+        allowNull: false
+      },
+      committeeNameId: {
+        type: DataTypes.UUID,
         allowNull: false
       },
       createdAt: {
