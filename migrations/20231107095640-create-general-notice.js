@@ -11,8 +11,7 @@ module.exports = {
           type: DataTypes.UUID
         },
         title: {
-          type: DataTypes.TEXT,
-          allowNull: false
+          type: DataTypes.TEXT
         },
         content: {
           type: DataTypes.TEXT,
