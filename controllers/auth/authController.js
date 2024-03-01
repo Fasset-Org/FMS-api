@@ -84,11 +84,8 @@ const AuthController = {
         },
         raw: true,
         nest: true,
-        // attributes: {
-        //   exclude: ["password"]
-        // },
+
         include: [
-          // { model: Role, as: "role" },
           { model: Department, as: "department" },
           {
             model: UserModule,
