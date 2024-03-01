@@ -20,8 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4
       },
       title: {
-        type: DataTypes.TEXT,
-        allowNull: false
+        type: DataTypes.TEXT
       },
       content: {
         type: DataTypes.TEXT,
@@ -43,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "GeneralNotice",
       tableName: "generalNotices",
-      schema: 'wms',
+      schema: "wms",
       timestamps: true
     }
   );
