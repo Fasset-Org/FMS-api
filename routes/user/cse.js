@@ -36,7 +36,11 @@ const {
   getAllResearchReports,
   deleteResearchReport,
   downloadAnnualReportsDocument,
-  downloadResearchReportsDocument
+  downloadResearchReportsDocument,
+  addCommitte,
+  editCommittee,
+  getAllCommittees,
+  deleteCommitee
 } = require("../../controllers/user/cseController");
 
 const CSERouter = Router();
@@ -54,13 +58,13 @@ CSERouter.delete('/deleteDocument/:documentId', AuthMid, deleteDocument)
 CSERouter.post('/generalNotice', AuthMid, addGeneralNotice);
 CSERouter.put('/generalNotice/:generalNoticeId', AuthMid, editGeneralNotice);
 CSERouter.delete('/generalNotice/:generalNoticeId', AuthMid, deleteGeneralNotice);
-CSERouter.get('/generalNotices', AuthMid, getAllGeneralNotices);
+CSERouter.get('/generalNotices', getAllGeneralNotices);
 
 
 CSERouter.post('/grantWindow', AuthMid, addGrantWindow);
 CSERouter.put('/grantWindow/:grantWindowId', AuthMid, editGrantWindow);
 CSERouter.delete('/grantWindow/:grantWindowId', AuthMid, deleteGrantWindow);
-CSERouter.get('/grantWindows', AuthMid, getAllGrantWindows);
+CSERouter.get('/grantWindows', getAllGrantWindows);
 
 // Banner Upload Routes 
 CSERouter.post('/banner', AuthMid, addBannerImage);
@@ -74,9 +78,13 @@ CSERouter.get('/boardMembers', getAllBoardMembers);
 CSERouter.delete('/boardMember/:boardMemberId', AuthMid, deleteBoardMember);
 
 // Committee Member Upload Routes
+CSERouter.post('/committee', AuthMid, addCommitte);
+CSERouter.put('/committee', AuthMid, editCommittee);
+CSERouter.get('/committees', getAllCommittees);
+CSERouter.delete('/committee', AuthMid, deleteCommitee);
 CSERouter.post('/committeeMember', AuthMid, addCommitteeMember);
 CSERouter.put('/committeeMember', AuthMid, editCommitteeMember);
-CSERouter.get('/committeeMembers', getAllCommitteeMembers);
+CSERouter.get('/committeeMembers/:committeeNameId', getAllCommitteeMembers);
 CSERouter.delete('/committeeMember/:committeeMemberId', AuthMid, deleteCommitteeMember);
 
 // Annual Reports Routes
