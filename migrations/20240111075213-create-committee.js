@@ -20,10 +20,13 @@ module.exports = {
         },
         imageFileURL: {
           type: DataTypes.TEXT,
-          allowNull: false
         },
         position: {
           type: DataTypes.TEXT,
+          allowNull: false
+        },
+        committeeNameId: {
+          type: DataTypes.UUID,
           allowNull: false
         },
         createdAt: {
