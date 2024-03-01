@@ -181,7 +181,7 @@ const CSEController = {
 
   getAllGeneralNotices: async (req, res, next) => {
     try {
-      const notices = await GeneralNotice.findAll();
+      const notices = await GeneralNotice.findAll({ order: [["createdAt", "DESC"]] });
 
       return res
         .status(200)
@@ -428,7 +428,9 @@ const CSEController = {
 
   getAllCommittees: async (req, res, next) => {
     try {
-      const committees = await CommitteeName.findAll();
+      const committees = await CommitteeName.findAll({
+        include: [{ model: Committee }]
+      });
 
       return res
         .status(200)
@@ -454,18 +456,17 @@ const CSEController = {
     try {
       const committeeMemberImageFile = req.files?.file;
 
-      if (!committeeMemberImageFile)
-        throw new ApiError("Error saving committee member", 400);
+      if (committeeMemberImageFile) {
+        const save = committeeMemberImageFile.mv(
+          `${process.env.BOARD_MEMBERS_FOLDER}/${committeeMemberImageFile.name}`
+        );
 
-      const save = committeeMemberImageFile.mv(
-        `${process.env.BOARD_MEMBERS_FOLDER}/${committeeMemberImageFile.name}`
-      );
-
-      if (!save) throw new ApiError("Error saving committee member", 400);
+        if (!save) throw new ApiError("Error saving committee member", 400);
+      }
 
       await Committee.create({
         ...req.body,
-        imageFileURL: committeeMemberImageFile.name
+        imageFileURL: committeeMemberImageFile?.name || ""
       });
 
       return res
@@ -518,7 +519,11 @@ const CSEController = {
 
   getAllCommitteeMembers: async (req, res, next) => {
     try {
-      const committeeMembers = await Committee.findAll();
+      const { committeeNameId } = req.params;
+
+      const committeeMembers = await Committee.findAll({
+        where: { committeeNameId: committeeNameId }
+      });
 
       return res
         .status(200)
