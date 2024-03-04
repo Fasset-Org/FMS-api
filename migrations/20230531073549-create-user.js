@@ -35,11 +35,11 @@ module.exports = {
           }
         },
         userType: {
-          type: DataTypes.STRING,
+          type: DataTypes.STRING
           // allowNull: false
         },
         departmentId: {
-          type: DataTypes.UUID,
+          type: DataTypes.UUID
           // allowNull: false
         },
         roleId: {
