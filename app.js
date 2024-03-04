@@ -22,9 +22,7 @@ const port = process.env.PORT || 8001;
 
 // middlewares
 app.use(fileUpload());
-app.use(
-  cors({ origin: "https://fasset-cms.azurewebsites.net", credentials: true })
-);
+app.use(cors({ origin: true, credentials: true }));
 app.use(morgan("method :url :status :res[content-length] - :response-time ms"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
