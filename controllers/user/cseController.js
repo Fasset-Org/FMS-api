@@ -69,7 +69,7 @@ const CSEController = {
     try {
       const documentTitles = await DocumentTitle.findAll({
         include: [Document],
-        order: [["createdAt", "DESC"]]
+        order: [["createdAt"]] 
       });
 
       return res
@@ -368,7 +368,7 @@ const CSEController = {
 
   getAllBoardMembers: async (req, res, next) => {
     try {
-      const boardMembers = await Board.findAll({});
+      const boardMembers = await Board.findAll({order: [["createdAt", "DESC"]]});
 
       return res
         .status(200)
