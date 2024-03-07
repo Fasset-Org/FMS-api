@@ -40,7 +40,8 @@ const {
   addCommitte,
   editCommittee,
   getAllCommittees,
-  deleteCommitee
+  deleteCommitee,
+  downloadDocument
 } = require("../../controllers/user/cseController");
 
 const CSERouter = Router();
@@ -53,6 +54,7 @@ CSERouter.get('/documentTitle/:titleId', AuthMid, getAllDocumentTitleById);
 CSERouter.post('/addDocument', AuthMid, addDocument);
 CSERouter.get('/documents', AuthMid, getAllDocuments);
 CSERouter.delete('/deleteDocument/:documentId', AuthMid, deleteDocument)
+CSERouter.get('/downloadDocument', downloadDocument);
 
 // Notice Board routes
 CSERouter.post('/generalNotice', AuthMid, addGeneralNotice);
