@@ -754,6 +754,20 @@ const CSEController = {
     }
   },
 
+  downloadDocument: (req, res, next) => {
+    try {
+      const filePath = `${process.env.DOWNLOADS_DOCUMENTS_FOLDER}/${req.query.fileName}`;
+
+      return res.download(filePath);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: false,
+        message: "Error happened"
+      });
+    }
+  },
+
   downloadAnnualReportsDocument: (req, res, next) => {
     try {
       const filePath = `${process.env.ANNUAL_REPORTS_FOLDER}/${req.query.fileName}`;
