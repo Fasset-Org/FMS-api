@@ -7,11 +7,11 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({Position}) {
+    static associate({ Position }) {
       // define association here
       this.belongsTo(Position, {
-        foreignKey: 'positionId'
-      })
+        foreignKey: "positionId"
+      });
     }
   }
   Application.init(
@@ -19,10 +19,13 @@ module.exports = (sequelize, DataTypes) => {
       id: {
         allowNull: false,
         primaryKey: true,
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4
+        type: DataTypes.UUID
       },
-      fullname: {
+      firstName: {
+        type: DataTypes.TEXT,
+        allowNull: false
+      },
+      lastName: {
         type: DataTypes.TEXT,
         allowNull: false
       },
@@ -31,6 +34,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false
       },
       nationality: {
+        type: DataTypes.TEXT,
+        allowNull: false
+      },
+      race: {
         type: DataTypes.TEXT,
         allowNull: false
       },
@@ -67,7 +74,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false
       },
       rejectReason: {
-        type: DataTypes.TEXT,
+        type: DataTypes.TEXT
       },
       positionId: {
         type: DataTypes.UUID,
@@ -85,8 +92,8 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Application",
-      tableName: 'applications',
-      schema: 'wms'
+      tableName: "applications",
+      schema: "wms"
     }
   );
   return Application;
