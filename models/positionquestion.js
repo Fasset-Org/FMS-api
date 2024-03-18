@@ -29,6 +29,9 @@ module.exports = (sequelize, DataTypes) => {
       expectedAnswer: {
         type: DataTypes.STRING
       },
+      type: {
+        type: DataTypes.STRING
+      },
       positionId: {
         type: DataTypes.UUID,
         allowNull: false
