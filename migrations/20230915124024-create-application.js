@@ -10,7 +10,11 @@ module.exports = {
           primaryKey: true,
           type: DataTypes.UUID
         },
-        fullname: {
+        firstName: {
+          type: DataTypes.TEXT,
+          allowNull: false
+        },
+        lastName: {
           type: DataTypes.TEXT,
           allowNull: false
         },
@@ -19,6 +23,10 @@ module.exports = {
           allowNull: false
         },
         nationality: {
+          type: DataTypes.TEXT,
+          allowNull: false
+        },
+        race: {
           type: DataTypes.TEXT,
           allowNull: false
         },
@@ -55,7 +63,7 @@ module.exports = {
           allowNull: false
         },
         rejectReason: {
-          type: DataTypes.TEXT,
+          type: DataTypes.TEXT
         },
         positionId: {
           type: DataTypes.UUID,
