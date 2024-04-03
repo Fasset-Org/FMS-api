@@ -6,7 +6,8 @@ const {
   Position,
   sequelize,
   Department,
-  Application
+  Application,
+  ApplicationAnswer
 } = require("../../models");
 const { ApiResponse, ApiError } = require("../../utils/response");
 const fs = require("node:fs");
@@ -286,6 +287,8 @@ const HumanResourceController = {
     }
   },
   jobApplication: async (req, res, next) => {
+    const t = await sequelize.transaction();
+
     try {
       const { email, jobTitle, positionId } = req.body;
 
@@ -313,14 +316,35 @@ const HumanResourceController = {
         file.mv(`${userDir}/${file.name}`);
       }
 
-      await Application.create({
-        ...req.body,
-        resumeDocumentName: req.files.resumeDocumentName.name,
-        idDocumentName: req.files.idDocumentName.name,
-        matricDocumentName: req.files.matricDocumentName.name,
-        qualificationDocumentName: req.files.qualificationDocumentName.name,
-        status: "submitted"
-      });
+      const additionalQuestionAnswers = JSON.parse(
+        req.body.additionalQuestions
+      );
+
+      const application = await Application.create(
+        {
+          ...req.body,
+          resumeDocumentName: req.files.resumeDocumentName.name,
+          idDocumentName: req.files.idDocumentName.name,
+          matricDocumentName: req.files.matricDocumentName.name,
+          qualificationDocumentName: req.files.qualificationDocumentName.name,
+          status: "submitted"
+        },
+        { transaction: t }
+      );
+
+      for (const [key, value] of Object.entries(additionalQuestionAnswers)) {
+        await ApplicationAnswer.create(
+          {
+            positionId: application.positionId,
+            candidateId: application.id,
+            positionQuestionId: key,
+            answer: value
+          },
+          { transaction: t }
+        );
+      }
+
+      t.commit();
 
       // send email to user to human resource
       const userOptions = {
@@ -356,6 +380,7 @@ const HumanResourceController = {
         );
     } catch (e) {
       console.log(e);
+      t.rollback();
       next(e);
     }
   },
@@ -366,7 +391,8 @@ const HumanResourceController = {
 
       const applications = await Application.findAll({
         where: { positionId: positionId },
-        order: [["createdAt", "DESC"]]
+        order: [["createdAt", "DESC"]],
+        include: [ApplicationAnswer]
       });
 
       return res
@@ -387,7 +413,8 @@ const HumanResourceController = {
       const application = await Application.findOne({
         where: {
           [Op.and]: [{ id: applicationId }, { positionId: positionId }]
-        }
+        },
+        include: [ApplicationAnswer]
       });
 
       return res
