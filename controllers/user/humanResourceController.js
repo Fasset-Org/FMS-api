@@ -414,7 +414,12 @@ const HumanResourceController = {
         where: {
           [Op.and]: [{ id: applicationId }, { positionId: positionId }]
         },
-        include: [ApplicationAnswer]
+        include: [
+          {
+            model: ApplicationAnswer,
+            include: [PositionQuestion]
+          }
+        ]
       });
 
       return res
