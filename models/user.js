@@ -7,25 +7,30 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ Department, Role, UserModule }) {
+    static associate({ Department, Role, UserModule, Device, LicenseSubscription, Simcards }) {
       // define association here
       this.belongsTo(Department, {
         foreignKey: "departmentId",
         onDelete: "CASCADE",
         hooks: true,
-        as: "department"
+        as: "department",
       });
 
       this.belongsTo(Role, {
         foreignKey: "roleId",
         onDelete: "CASCADE",
         hooks: true,
-        as: "role"
+        as: "role",
       });
+
+      this.hasMany(Device, { foreignKey: "userId" });
+      this.hasMany(LicenseSubscription, { foreignKey: "userId"} );
+      this.hasOne(Simcards, {foreignKey: "userId"});
+
 
       this.hasMany(UserModule, {
         foreignKey: "userId",
-        as: "userModules"
+        as: "userModules",
       });
     }
   }
@@ -35,55 +40,55 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         allowNull: false,
         primaryKey: true,
-        defaultValue: DataTypes.UUIDV4
+        defaultValue: DataTypes.UUIDV4,
       },
       fullName: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
       },
       userName: {
         type: DataTypes.STRING,
-        unique: true
+        unique: true,
       },
       email: {
         type: DataTypes.STRING,
         unique: true,
-        allowNull: false
+        allowNull: false,
       },
       password: {
         type: DataTypes.STRING,
         validate: {
           min: {
             args: [10],
-            msg: "Minimum 10 characters required for password"
-          }
-        }
+            msg: "Minimum 10 characters required for password",
+          },
+        },
       },
       userType: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
         // allowNull: false
       },
       departmentId: {
-        type: DataTypes.UUID
+        type: DataTypes.UUID,
         // allowNull: false,
       },
       roleId: {
-        type: DataTypes.UUID
+        type: DataTypes.UUID,
       },
       createdAt: {
         allowNull: false,
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: DataTypes.DATE
-      }
+        type: DataTypes.DATE,
+      },
     },
     {
       sequelize,
       modelName: "User",
       schema: "wms",
       timestamps: true,
-      tableName: "users"
+      tableName: "users",
     }
   );
   return User;
