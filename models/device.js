@@ -7,81 +7,62 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
+    static associate({ User }) {
       // define association here
+      this.belongsTo(User, { foreignKey: "userId" });
     }
   }
   Device.init(
     {
       id: {
         allowNull: false,
-
-        autoIncrement: true,
-
         primaryKey: true,
-
         type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
       },
-
-      DeviceName: {
-        type: DataTypes.STRING,
+      deviceName: {
+        type: DataTypes.TEXT,
+        //allowNull: false
       },
-
-      DeviceType: {
-        type: DataTypes.STRING,
+      deviceType: {
+        type: DataTypes.TEXT,
+        //allowNull: false
       },
-
-      SerialNumber: {
-        type: DataTypes.INTEGER,
+      serialNumberImei: {
+        type: DataTypes.TEXT,
+        allowNull: false,
       },
-
-      Warranty: {
-        type: DataTypes.STRING,
+      warranty: {
+        type: DataTypes.TEXT,
+        allowNull: false,
       },
-
-      AssignedTo: {
-        type: DataTypes.STRING,
-      },
-
-      CurrentStatus: {
-        type: DataTypes.STRING,
-      },
-
-      Remarks: {
-        type: DataTypes.STRING,
-      },
-
-      Uploads: {
-        type: DataTypes.STRING,
-      },
-
-      Disposal: {
-        type: DataTypes.STRING,
-      },
-
-      UserId: {
+      userId: {
         type: DataTypes.UUID,
-
-        // allowNull: false,
+        allowNull: true,
       },
-
+      status: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
+      assetTag: {
+        type: DataTypes.TEXT,
+        //allowNull: false,
+      },
       createdAt: {
         allowNull: false,
-
         type: DataTypes.DATE,
       },
-
       updatedAt: {
         allowNull: false,
-
         type: DataTypes.DATE,
       },
     },
     {
       sequelize,
       modelName: "Device",
+      schema: "wms",
       tableName: "devices",
-      timestamps: true
+      timestamps: true,
     }
   );
   return Device;
