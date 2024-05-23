@@ -128,6 +128,7 @@ const CSEController = {
       return res.status(200).json(ApiResponse("Document deleted successfully"));
     } catch (e) {
       console.log(e);
+      next(e)
     }
   },
 
@@ -708,7 +709,7 @@ const CSEController = {
 
       await researchReport.update({
         ...req.body,
-        eserachReportFileURL: researchFileName
+        researchReportFileURL: researchFileName
       });
 
       return res
