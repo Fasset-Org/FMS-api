@@ -38,6 +38,13 @@ app.get("/", (req, res, next) => {
   });
 });
 
+app.get("/test", (req, res, next) => {
+  return res.status(200).json({
+    success: true,
+    message: "Yes, it is working on route test"
+  });
+});
+
 // use appRouters
 app.use(`${BASE_URL}`, appRouters);
 
