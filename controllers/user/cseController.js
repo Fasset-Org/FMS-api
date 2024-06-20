@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const {
   DocumentTitle,
   Document,
@@ -69,7 +70,7 @@ const CSEController = {
     try {
       const documentTitles = await DocumentTitle.findAll({
         include: [Document],
-        order: [["createdAt"]] 
+        order: [["createdAt"]]
       });
 
       return res
@@ -128,7 +129,7 @@ const CSEController = {
       return res.status(200).json(ApiResponse("Document deleted successfully"));
     } catch (e) {
       console.log(e);
-      next(e)
+      next(e);
     }
   },
 
@@ -182,7 +183,9 @@ const CSEController = {
 
   getAllGeneralNotices: async (req, res, next) => {
     try {
-      const notices = await GeneralNotice.findAll({ order: [["createdAt", "DESC"]] });
+      const notices = await GeneralNotice.findAll({
+        order: [["createdAt", "DESC"]]
+      });
 
       return res
         .status(200)
@@ -242,7 +245,13 @@ const CSEController = {
   },
   getAllGrantWindows: async (req, res, next) => {
     try {
-      const grants = await GrantWindowApplication.findAll();
+      const grants = await GrantWindowApplication.findAll({
+        where: {
+          closingDate: {
+            [Op.gt]: new Date()
+          }
+        }
+      });
 
       return res
         .status(200)
@@ -369,7 +378,9 @@ const CSEController = {
 
   getAllBoardMembers: async (req, res, next) => {
     try {
-      const boardMembers = await Board.findAll({order: [["createdAt", "DESC"]]});
+      const boardMembers = await Board.findAll({
+        order: [["createdAt", "DESC"]]
+      });
 
       return res
         .status(200)
