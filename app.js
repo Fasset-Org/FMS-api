@@ -24,7 +24,7 @@ const port = process.env.PORT || 8001;
 app.use(fileUpload());
 app.use(cors({ origin: true, credentials: true }));
 app.use(morgan("method :url :status :res[content-length] - :response-time ms"));
-app.use(express.json());
+app.use(express.json({ limit: "500mb" }));
 app.use(express.urlencoded({ extended: false }));
 
 const NODE_ENV = process.env.NODE_ENV || "dev";
