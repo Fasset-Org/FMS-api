@@ -53,7 +53,8 @@ const CSEController = {
       const { titleId } = req.params;
 
       const documentTitle = await DocumentTitle.findOne({
-        where: { id: titleId }
+        where: { id: titleId },
+        order: [["createdAt"]]
       });
 
       return res
@@ -109,7 +110,7 @@ const CSEController = {
   },
   getAllDocuments: async (req, res, next) => {
     try {
-      const documents = await Document.findAll();
+      const documents = await Document.findAll({ order: [["createdAt"]] });
 
       return res
         .status(200)
@@ -184,7 +185,7 @@ const CSEController = {
   getAllGeneralNotices: async (req, res, next) => {
     try {
       const notices = await GeneralNotice.findAll({
-        order: [["createdAt", "DESC"]]
+        order: [["createdAt", "DESC"]],
       });
 
       return res
