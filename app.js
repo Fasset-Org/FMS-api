@@ -21,7 +21,14 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 const port = process.env.PORT || 8001;
 
 // middlewares
-app.use(fileUpload({ limits: { fileSize: 500 * 1024 * 1024 } }));
+app.use(
+  fileUpload({
+    limits: { fileSize: 500 * 1024 * 1024 },
+    useTempFiles: true,
+    tempFileDir: "/tmp/",
+    debug: false
+  })
+);
 app.use(cors({ origin: true, credentials: true }));
 app.use(morgan("method :url :status :res[content-length] - :response-time ms"));
 app.use(express.json({ limit: "500mb" }));
