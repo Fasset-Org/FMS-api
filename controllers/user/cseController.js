@@ -54,7 +54,7 @@ const CSEController = {
 
       const documentTitle = await DocumentTitle.findOne({
         where: { id: titleId },
-        order: [["createdAt"]]
+        order: [["createdAt", "DESC"]]
       });
 
       return res
