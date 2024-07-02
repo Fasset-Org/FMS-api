@@ -379,7 +379,7 @@ const CSEController = {
   getAllBoardMembers: async (req, res, next) => {
     try {
       const boardMembers = await Board.findAll({
-        order: [["createdAt", "DESC"]]
+        // order: [["createdAt", "DESC"]]
       });
 
       return res
