@@ -379,7 +379,7 @@ const CSEController = {
   getAllBoardMembers: async (req, res, next) => {
     try {
       const boardMembers = await Board.findAll({
-        // order: [["createdAt", "DESC"]]
+        order: [["createdAt", "ASC"]]
       });
 
       return res
@@ -441,7 +441,10 @@ const CSEController = {
   getAllCommittees: async (req, res, next) => {
     try {
       const committees = await CommitteeName.findAll({
-        include: [{ model: Committee }]
+        include: [{ model: Committee, }],
+        order: [
+          [Committee, 'createdAt', 'ASC']
+        ]
       });
 
       return res
@@ -534,7 +537,10 @@ const CSEController = {
       const { committeeNameId } = req.params;
 
       const committeeMembers = await Committee.findAll({
-        where: { committeeNameId: committeeNameId }
+        where: { committeeNameId: committeeNameId },
+        order: [
+          ['createdAt', 'ASC']
+        ]
       });
 
       return res
