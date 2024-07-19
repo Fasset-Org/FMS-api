@@ -58,11 +58,15 @@ const AuthController = {
         Please click <a href="${process.env.APP_URL}/resetPassword/${resetPasswordToken}">here</a> to reset your password
       `;
 
-      sendEmail({
-        email: user.email,
-        subject: "CMS Password Reset",
-        html: html
-      });
+      try{
+        sendEmail({
+          email: user.email,
+          subject: "CMS Password Reset",
+          html: html
+        });
+      }catch(e){
+        console.log(e)
+      }
 
       return res
         .status(201)
@@ -179,7 +183,7 @@ const AuthController = {
         await bcryptjs.genSalt(10)
       );
 
-      await user.update({ password: hash });
+      await user.update({ ...req.body, password: hash });
 
       return res
         .status(200)
