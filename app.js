@@ -17,6 +17,7 @@ const app = express();
 dotenv.config({ path: `${__dirname}/config/config.env` });
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use(express.static(path.join(__dirname, 'public')));
 
 const port = process.env.PORT || 8001;
 
