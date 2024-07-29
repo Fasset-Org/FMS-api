@@ -441,10 +441,8 @@ const CSEController = {
   getAllCommittees: async (req, res, next) => {
     try {
       const committees = await CommitteeName.findAll({
-        include: [{ model: Committee, }],
-        order: [
-          [Committee, 'createdAt', 'ASC']
-        ]
+        include: [{ model: Committee }],
+        order: [[Committee, "createdAt", "ASC"]]
       });
 
       return res
@@ -538,9 +536,7 @@ const CSEController = {
 
       const committeeMembers = await Committee.findAll({
         where: { committeeNameId: committeeNameId },
-        order: [
-          ['createdAt', 'ASC']
-        ]
+        order: [["createdAt", "ASC"]]
       });
 
       return res
@@ -641,7 +637,9 @@ const CSEController = {
 
   getAllAnnualReports: async (req, res, next) => {
     try {
-      const annualReports = await AnnualReport.findAll();
+      const annualReports = await AnnualReport.findAll({
+        order: [["createdAt", "ASC"]]
+      });
 
       return res
         .status(200)
@@ -740,7 +738,9 @@ const CSEController = {
 
   getAllResearchReports: async (req, res, next) => {
     try {
-      const researchReports = await ResearchReport.findAll();
+      const researchReports = await ResearchReport.findAll({
+        order: [["createdAt", "ASC"]]
+      });
 
       return res
         .status(200)
