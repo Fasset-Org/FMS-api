@@ -638,7 +638,7 @@ const CSEController = {
   getAllAnnualReports: async (req, res, next) => {
     try {
       const annualReports = await AnnualReport.findAll({
-        order: [["createdAt", "ASC"]]
+        order: [["createdAt", "DESC"]]
       });
 
       return res
@@ -739,7 +739,7 @@ const CSEController = {
   getAllResearchReports: async (req, res, next) => {
     try {
       const researchReports = await ResearchReport.findAll({
-        order: [["createdAt", "ASC"]]
+        order: [["createdAt", "DESC"]]
       });
 
       return res
