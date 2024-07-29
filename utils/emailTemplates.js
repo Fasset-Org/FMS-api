@@ -12,6 +12,7 @@ const EmailTemplates = {
                 PO Box 6801, Cresta, 2118</p>
                 <br />
                 <img src="${process.env.API_URL}/images/footer-image.jpg" alt="" />
+                <br />
                 `;
   }
 };
