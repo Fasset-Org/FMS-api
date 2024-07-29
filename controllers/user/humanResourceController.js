@@ -13,6 +13,7 @@ const { ApiResponse, ApiError } = require("../../utils/response");
 const fs = require("node:fs");
 const { v4: uuidv4 } = require("uuid");
 const sendEmail = require("../../utils/sendEmail");
+const EmailTemplates = require("../../utils/emailTemplates");
 
 const HumanResourceController = {
   addQualification: async (req, res, next) => {
@@ -290,13 +291,17 @@ const HumanResourceController = {
     const t = await sequelize.transaction();
 
     try {
-      const { email, jobTitle, positionId } = req.body;
+      const { email, jobTitle, positionId, idNumber } = req.body;
 
-      const emailExist = await Application.findOne({ where: { email: email } });
+      const isApplied = await Application.findOne({
+        where: {
+          [Op.and]: [{ idNumber: idNumber }, { positionId: positionId }]
+        }
+      });
 
       const position = await Position.findOne({ where: { id: positionId } });
 
-      if (emailExist) {
+      if (isApplied) {
         throw new ApiError("You have already applied for this position", 400);
       }
 
@@ -327,6 +332,10 @@ const HumanResourceController = {
           idDocumentName: req.files.idDocumentName.name,
           matricDocumentName: req.files.matricDocumentName.name,
           qualificationDocumentName: req.files.qualificationDocumentName.name,
+          idNumber:
+            req.body.idNumber === ""
+              ? req.body.passportNumber
+              : req.body.idNumber,
           status: "submitted"
         },
         { transaction: t }
@@ -349,27 +358,22 @@ const HumanResourceController = {
       // send email to user to human resource
       const userOptions = {
         email: email,
-        subject: `${position.jobTitle} - Automatic Reply`,
-        html: `<p>Dear ${req.body.fullname}</p><p>We thank you for showing interest to join FASSET and hereby 
-                acknowledge receipt of your application for the above position. Please note that your application 
-                is receiving attention from the HR Department.</p> <p>If you have not received communication 
-                within 6 weeks from the closing date, kindly consider your application as unsuccessful.</p> 
-                <p>Kind Regards,</p><p>FASSET HR TEAM</p><p>1st Floor, 296 Kent Avenue, Ferndale, Randburg, 2194 
-                PO Box 6801, Cresta, 2118</p>`
+        subject: `${jobTitle} - Automatic Reply`,
+        html: EmailTemplates.autoApplyEmail(req.body.gender, req.body.lastName)
       };
 
       sendEmail(userOptions);
 
-      const hrOptions = {
-        email: position.applicationsEmail,
-        subject: `${req.body.fullname} - ${position.jobTitle} Application`,
-        html: `<p>Dear Hiring Manager</p><br /><p>Please received application of ${req.body.fullname}</p>
-        <br /><p>To view application please click 
-        <a href="${process.env.APP_URL}/humanResource/jobApplications">here</a>
-        </p>
-        `
-      };
-      sendEmail(hrOptions);
+      // const hrOptions = {
+      //   email: position.applicationsEmail,
+      //   subject: `${req.body.fullname} - ${position.jobTitle} Application`,
+      //   html: `<p>Dear Hiring Manager</p><br /><p>Please received application of ${req.body.fullname}</p>
+      //   <br /><p>To view application please click 
+      //   <a href="${process.env.APP_URL}/humanResource/jobApplications">here</a>
+      //   </p>
+      //   `
+      // };
+      // sendEmail(hrOptions);
 
       return res
         .status(201)
