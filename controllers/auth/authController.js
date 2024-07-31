@@ -52,20 +52,22 @@ const AuthController = {
       t.commit();
 
       const html = `
-        Dear ${user.email} <br /> 
+        Dear ${user.fullName} <br /> 
         Please note that you have been added to FMS, if you are not aware of  
         this action please contact devsupport@fasset.org.za. <br /><br /> 
         Please click <a href="${process.env.APP_URL}/resetPassword/${resetPasswordToken}">here</a> to reset your password
+        <br />
+        <br />
       `;
 
-      try{
+      try {
         sendEmail({
           email: user.email,
           subject: "CMS Password Reset",
           html: html
         });
-      }catch(e){
-        console.log(e)
+      } catch (e) {
+        console.log(e);
       }
 
       return res
@@ -84,7 +86,10 @@ const AuthController = {
 
       const user = await User.findOne({
         where: {
-          [Op.or]: [{ email: email }, { userName: email }]
+          [Op.or]: [
+            { email: { [Op.iLike]: email } },
+            { userName: { [Op.iLike]: email } }
+          ]
         },
         raw: true,
         nest: true,
@@ -109,7 +114,7 @@ const AuthController = {
       const token = getJWTtoken(
         { ...user, password: "" },
         process.env.JWT_ACCESS_KEY,
-        `1h`
+        `31d`
       );
 
       const refreshToken = getJWTtoken(
