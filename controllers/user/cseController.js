@@ -53,7 +53,8 @@ const CSEController = {
       const { titleId } = req.params;
 
       const documentTitle = await DocumentTitle.findOne({
-        where: { id: titleId }
+        where: { id: titleId },
+        include: [Document]
       });
 
       return res
