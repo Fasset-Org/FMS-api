@@ -368,7 +368,7 @@ const HumanResourceController = {
       //   email: position.applicationsEmail,
       //   subject: `${req.body.fullname} - ${position.jobTitle} Application`,
       //   html: `<p>Dear Hiring Manager</p><br /><p>Please received application of ${req.body.fullname}</p>
-      //   <br /><p>To view application please click 
+      //   <br /><p>To view application please click
       //   <a href="${process.env.APP_URL}/humanResource/jobApplications">here</a>
       //   </p>
       //   `
@@ -475,17 +475,11 @@ const HumanResourceController = {
       const emailOptions = {
         email: application.email,
         subject: `${application.Position.jobTitle}`,
-        html: `<p>Dear ${application.fullname}</p><p>Thank you for applying for ${application.Position.jobTitle} .</p>
-        <p>
-        <p>There have been several applications and after careful consideration we decided to continue with other 
-         applications.</p>
-        <p>We thank you sincerely for your efforts and wish you all the best in your job search and securing a new        
-         role</p>
-         <p>We do appreciate your interest in us, and we would like to retain your details on file should a more suitable 
-          position arise.</p>
-          <p>Kind Regards,</p>
-          <p>Fasset HR Team</p>
-        `
+        html: EmailTemplates.autoRejectEmail(
+          application.gender,
+          application.lastName,
+          application.Position.jobTitle
+        )
       };
 
       sendEmail(emailOptions);
