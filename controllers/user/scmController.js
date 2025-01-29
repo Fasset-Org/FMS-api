@@ -93,7 +93,7 @@ const SCMController = {
     try {
       const currentTenders = await Tender.findAll({
         where: { tenderStatus: "active" },
-        order: [["createdAt", "DESC"]]
+        order: [["closingDate", "DESC"]]
       });
 
       return res
@@ -114,7 +114,7 @@ const SCMController = {
     try {
       const previousTenders = await Tender.findAll({
         where: { tenderStatus: "inactive" },
-        order: [["createdAt", "DESC"]]
+        order: [["closingDate", "DESC"]]
       });
 
       return res
@@ -136,7 +136,7 @@ const SCMController = {
     try {
       const cancelledTenders = await Tender.findAll({
         where: { tenderStatus: "cancelled" },
-        order: [["createdAt", "DESC"]]
+        order: [["closingDate", "DESC"]]
       });
 
       return res
