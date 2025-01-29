@@ -672,6 +672,10 @@ const CSEController = {
     try {
       const researchFile = req.files?.file;
 
+      console.log(researchFile);
+
+      // return;
+
       if (!researchFile)
         throw new ApiError("Error saving research report", 400);
 
@@ -699,7 +703,7 @@ const CSEController = {
     try {
       const { researchReportId } = req.body;
 
-      console.log(req.body);
+      // console.log(req.files);
 
       const researchReport = await ResearchReport.findOne({
         where: { id: researchReportId }
@@ -708,7 +712,7 @@ const CSEController = {
       if (!researchReport)
         throw new ApiError("Error updating research report", 404);
 
-      const researchFile = req.file?.file;
+      const researchFile = req.files?.file;
       let researchFileName = "";
 
       if (researchFile) {
